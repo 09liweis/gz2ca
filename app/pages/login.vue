@@ -5,49 +5,36 @@
         <h1 class="text-3xl font-bold text-center text-gray-900 mb-8">登录</h1>
 
         <form @submit.prevent="handleLogin" class="space-y-6">
-          <!-- Email -->
-          <div>
-            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-              邮箱地址
-            </label>
-            <input
-              id="email"
-              v-model="form.email"
-              type="email"
-              required
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-              placeholder="请输入邮箱地址"
-            />
-          </div>
+          <Input
+            id="email"
+            v-model="form.email"
+            label="邮箱地址"
+            type="email"
+            placeholder="请输入邮箱地址"
+            required
+          />
 
-          <!-- Password -->
-          <div>
-            <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
-              密码
-            </label>
-            <input
-              id="password"
-              v-model="form.password"
-              type="password"
-              required
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-              placeholder="请输入密码"
-            />
-          </div>
+          <Input
+            id="password"
+            v-model="form.password"
+            label="密码"
+            type="password"
+            placeholder="请输入密码"
+            required
+          />
 
           <!-- Error Message -->
           <div v-if="errorMessage" class="text-red-600 text-sm text-center">
             {{ errorMessage }}
           </div>
 
-          <!-- Submit Button -->
-          <button
+          <Button
             type="submit"
-            :disabled="loading"
-            class="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            :loading="loading"
+            loading-text="登录中..."
           >
-            {{ loading ? '登录中...' : '登录' }}
-          </button>
+            登录
+          </Button>
         </form>
 
         <!-- Signup Link -->
@@ -64,6 +51,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import Input from '~/components/form/Input.vue'
+import Button from '~/components/form/Button.vue'
 
 const form = ref({
   email: '',

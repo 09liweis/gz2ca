@@ -4,7 +4,7 @@ import { hashPassword } from '../../utils/password';
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
-  const { email, password } = body;
+  const { email, password,fn,ln } = body;
 
   // Basic validation
   if (!email || !password) {
@@ -48,8 +48,8 @@ export default defineEventHandler(async (event) => {
     const user = await User.create({
       eml: email,
       pwd: hashedPassword,
-      fn: '',
-      ln: '',
+      fn,
+      ln,
       role: 'user',
       lts: new Date(),
       ts: new Date(),
