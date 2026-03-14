@@ -1,4 +1,5 @@
 import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3'
+import { generateThumbnail } from './image'
 
 let s3Client: S3Client | null = null
 
@@ -16,7 +17,7 @@ const getS3Client = () => {
   return s3Client
 }
 
-export const uploadToR2 = async (file: File, key: string): Promise<{ url: string; thumb?: string }> => {
+export const uploadToR2 = async (file: File, key: string, generateThumb = true): Promise<{ url: string; thumb?: string }> => {
   const client = getS3Client()
   const bucket = process.env.R2_BUCKET_NAME || ''
 
@@ -25,10 +26,11 @@ export const uploadToR2 = async (file: File, key: string): Promise<{ url: string
   }
 
   try {
-    // Upload original image
+    // Convert File to Buffer
     const arrayBuffer = await file.arrayBuffer()
     const buffer = Buffer.from(arrayBuffer)
 
+    // Upload original image
     const command = new PutObjectCommand({
       Bucket: bucket,
       Key: key,
@@ -40,7 +42,31 @@ export const uploadToR2 = async (file: File, key: string): Promise<{ url: string
 
     const url = `${process.env.R2_PUBLIC_URL}/${key}`
 
-    return { url }
+    let thumbUrl: string | undefined
+
+    // Generate and upload thumbnail if it's an image
+    if (generateThumb && file.type.startsWith('image/')) {
+      try {
+        const thumbBuffer = await generateThumbnail(buffer)
+        const thumbKey = key.replace(/(\.[^.]+)$/, '_thumb$1')
+
+        const thumbCommand = new PutObjectCommand({
+          Bucket: bucket,
+          Key: thumbKey,
+          Body: thumbBuffer,
+          ContentType: 'image/jpeg'
+        })
+
+        await client.send(thumbCommand)
+
+        thumbUrl = `${process.env.R2_PUBLIC_URL}/${thumbKey}`
+      } catch (thumbError) {
+        console.error('Thumbnail generation error:', thumbError)
+        // Continue without thumbnail if generation fails
+      }
+    }
+
+    return { url, thumb: thumbUrl }
   } catch (error) {
     console.error('Upload error:', error)
     throw new Error('文件上传失败')

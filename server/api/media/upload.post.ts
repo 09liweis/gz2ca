@@ -36,13 +36,13 @@ export default defineEventHandler(async (event) => {
       const randomString = Math.random().toString(36).substring(2, 15)
       const key = `events/${eventId}/${timestamp}-${randomString}-${name}`
 
-      // Upload to R2
-      const { url } = await uploadToR2(fileObj, key)
+      // Upload to R2 with thumbnail
+      const { url, thumb } = await uploadToR2(fileObj, key, true)
 
       // Save to database
       const media = await Media.create({
         event_id: eventId,
-        thumb: url,
+        thumb: thumb || url,
         src: url,
         ts: new Date(),
         mt: new Date()

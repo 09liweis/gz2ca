@@ -8,7 +8,7 @@
         class="relative group aspect-square rounded-lg overflow-hidden cursor-pointer"
         @click="openLightbox(indexOf(item))"
       >
-        <img :src="item.src" class="w-full h-full object-cover transition-transform group-hover:scale-105" />
+        <img :src="item.thumb || item.src" :alt="item.src" class="w-full h-full object-cover transition-transform group-hover:scale-105" loading="lazy" />
         <div v-if="canDelete" class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
           <button
             @click.stop="handleDelete(item)"
