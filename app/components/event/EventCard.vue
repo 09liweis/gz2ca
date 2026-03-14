@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+  <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer" @click="handleClick">
     <div class="p-6">
       <h2 class="text-xl font-semibold text-gray-900 mb-2">{{ event.tl }}</h2>
       <p class="text-gray-600 mb-4 line-clamp-3">{{ event.desc || '暂无描述' }}</p>
@@ -34,7 +34,7 @@
       >
         {{ event.status === 'published' ? '已发布' : '草稿' }}
       </span>
-      <div v-if="showActions" class="flex gap-2">
+      <div v-if="showActions" class="flex gap-2" @click.stop>
         <button
           @click="$emit('edit', event)"
           class="text-blue-600 hover:text-blue-700 text-sm"
@@ -53,12 +53,16 @@
 </template>
 
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
+
 interface Props {
   event: any
   showActions?: boolean
 }
 
-withDefaults(defineProps<Props>(), {
+const router = useRouter()
+
+const props = withDefaults(defineProps<Props>(), {
   showActions: false
 })
 
@@ -73,5 +77,9 @@ const formatDate = (date: string) => {
     month: 'long',
     day: 'numeric'
   })
+}
+
+const handleClick = () => {
+  router.push(`/events/${props.event._id}`)
 }
 </script>
