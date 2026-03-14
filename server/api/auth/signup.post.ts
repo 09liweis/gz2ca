@@ -1,6 +1,6 @@
 import { defineEventHandler, readBody, setCookie } from 'h3';
 import { User } from '../../models/user.schema';
-import bcrypt from 'bcrypt';
+import { hashPassword } from '../../utils/password';
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
@@ -42,7 +42,7 @@ export default defineEventHandler(async (event) => {
     }
 
     // Hash password with bcrypt
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await hashPassword(password);
 
     // Create new user with minimal fields
     const user = await User.create({

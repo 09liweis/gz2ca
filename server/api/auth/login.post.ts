@@ -1,6 +1,6 @@
 import { defineEventHandler, setCookie } from 'h3';
 import { User } from '../../models/user.schema';
-import bcrypt from 'bcrypt';
+import { comparePassword } from '../../utils/password';
 import { getLoginToken } from '../../utils/jwt';
 
 export default defineEventHandler(async (event) => {
@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
     }
 
     // Verify password
-    const isPasswordValid = await bcrypt.compare(password, user.pwd);
+    const isPasswordValid = await comparePassword(password, user.pwd);
     if (!isPasswordValid) {
       throw createError({
         statusCode: 401,
