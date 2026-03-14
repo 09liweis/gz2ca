@@ -86,12 +86,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import Input from '~/components/form/Input.vue'
 import Button from '~/components/form/Button.vue'
 import Textarea from '~/components/form/Textarea.vue'
 import EventList from '~/components/event/EventList.vue'
 import { get, put } from '~/utils/http'
+import { useUser } from '~/composables/useAuth'
+
+const { user: globalUser } = useUser()
 
 const form = ref({
   fn: '',
@@ -108,22 +111,17 @@ const errorMessage = ref('')
 const successMessage = ref('')
 const eventsErrorMessage = ref('')
 
-// Load existing profile
-const loadProfile = async () => {
-  try {
-    const response = await get('/api/user/profile')
-
-    if (response.success && response.user) {
-      form.value.fn = response.user.fn || ''
-      form.value.ln = response.user.ln || ''
-      form.value.graduationYear = response.user.graduationYear || ''
-      form.value.location = response.user.location || ''
-      form.value.bio = response.user.bio || ''
-    }
-  } catch (error: any) {
-    errorMessage.value = '加载个人资料失败'
+// Initialize form with global user data
+onMounted(() => {
+  if (globalUser.value) {
+    form.value.fn = globalUser.value.fn || ''
+    form.value.ln = globalUser.value.ln || ''
+    form.value.graduationYear = globalUser.value.graduationYear || ''
+    form.value.location = globalUser.value.location || ''
+    form.value.bio = globalUser.value.bio || ''
   }
-}
+  loadMyEvents()
+})
 
 // Load user's events
 const loadMyEvents = async () => {
@@ -161,9 +159,4 @@ const handleUpdateProfile = async () => {
     loading.value = false
   }
 }
-
-onMounted(() => {
-  loadProfile()
-  loadMyEvents()
-})
 </script>

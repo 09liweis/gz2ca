@@ -35,18 +35,14 @@ import Button from '~/components/form/Button.vue'
 import EventList from '~/components/event/EventList.vue'
 import CreateEventModal from '~/components/event/CreateEventModal.vue'
 import { get, post } from '~/utils/http'
+import { useUser } from '~/composables/useAuth'
 
-const isLoggedIn = ref(false)
+const { isLoggedIn } = useUser()
+
 const loading = ref(false)
 const errorMessage = ref('')
 const events = ref<any[]>([])
 const showCreateModal = ref(false)
-
-// Check login status
-const checkLoginStatus = () => {
-  const token = localStorage.getItem('token')
-  isLoggedIn.value = !!token
-}
 
 // Load events
 const loadEvents = async () => {
@@ -78,7 +74,6 @@ const handleCreateEvent = async (data: any) => {
 }
 
 onMounted(() => {
-  checkLoginStatus()
   loadEvents()
 })
 </script>

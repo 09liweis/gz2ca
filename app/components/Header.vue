@@ -18,9 +18,26 @@
           <NuxtLink to="/events" class="text-gray-700 hover:text-blue-600 transition-colors">
             活动
           </NuxtLink>
-          <NuxtLink to="/login" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-            登录
-          </NuxtLink>
+          
+          <!-- Auth Section -->
+          <template v-if="isLoggedIn">
+            <div class="flex items-center space-x-4">
+              <NuxtLink to="/profile" class="text-gray-700 hover:text-blue-600 transition-colors">
+                {{ userName }}
+              </NuxtLink>
+              <button
+                @click="handleLogout"
+                class="text-gray-700 hover:text-red-600 transition-colors"
+              >
+                退出
+              </button>
+            </div>
+          </template>
+          <template v-else>
+            <NuxtLink to="/login" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              登录
+            </NuxtLink>
+          </template>
         </div>
 
         <!-- Mobile menu button -->
@@ -46,9 +63,24 @@
           <NuxtLink @click="isOpen = false" to="/events" class="text-gray-700 hover:text-blue-600 transition-colors">
             活动
           </NuxtLink>
-          <NuxtLink @click="isOpen = false" to="/login" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-center">
-            登录
-          </NuxtLink>
+          
+          <!-- Mobile Auth Section -->
+          <template v-if="isLoggedIn">
+            <NuxtLink @click="isOpen = false" to="/profile" class="text-gray-700 hover:text-blue-600 transition-colors">
+              {{ userName }}
+            </NuxtLink>
+            <button
+              @click="handleLogout"
+              class="text-gray-700 hover:text-red-600 transition-colors text-left"
+            >
+              退出
+            </button>
+          </template>
+          <template v-else>
+            <NuxtLink @click="isOpen = false" to="/login" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-center">
+              登录
+            </NuxtLink>
+          </template>
         </div>
       </div>
     </nav>
@@ -56,7 +88,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useUser } from '~/composables/useAuth'
 
+const { isLoggedIn, userName, initAuth, logout } = useUser()
 const isOpen = ref(false)
+
+const handleLogout = () => {
+  logout()
+  isOpen.value = false
+}
+
+onMounted(() => {
+  initAuth()
+})
 </script>

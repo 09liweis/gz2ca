@@ -54,6 +54,7 @@ import { ref } from 'vue'
 import Input from '~/components/form/Input.vue'
 import Button from '~/components/form/Button.vue'
 import { post } from '~/utils/http'
+import { initAuth } from '~/composables/useAuth'
 
 const form = ref({
   email: '',
@@ -76,6 +77,9 @@ const handleLogin = async () => {
       localStorage.setItem('userId', response.user._id)
 
       errorMessage.value = '登录成功！正在跳转...'
+
+      // Re-initialize auth state
+      await initAuth()
 
       setTimeout(() => {
         navigateTo('/profile')
