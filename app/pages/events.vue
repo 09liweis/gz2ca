@@ -21,7 +21,7 @@
       />
     </div>
 
-    <CreateEventModal
+    <EventModal
       :is-open="showCreateModal"
       @close="showCreateModal = false"
       @submit="handleCreateEvent"
@@ -33,7 +33,7 @@
 import { ref, onMounted } from 'vue'
 import Button from '~/components/form/Button.vue'
 import EventList from '~/components/event/EventList.vue'
-import CreateEventModal from '~/components/event/CreateEventModal.vue'
+import EventModal from '~/components/event/EventModal.vue'
 import { get, post } from '~/utils/http'
 import { useUser } from '~/composables/useAuth'
 
@@ -62,7 +62,7 @@ const loadEvents = async () => {
 }
 
 // Create event
-const handleCreateEvent = async (data: any) => {
+const handleCreateEvent = async (eventId: string | null, data: any) => {
   try {
     await post('/api/events', data)
 

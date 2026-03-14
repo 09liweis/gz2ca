@@ -5,7 +5,7 @@
   >
     <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
       <div class="p-6 border-b">
-        <h2 class="text-2xl font-bold text-gray-900">创建活动</h2>
+        <h2 class="text-2xl font-bold text-gray-900">{{ isEdit ? '编辑活动' : '创建活动' }}</h2>
       </div>
       <form @submit.prevent="handleSubmit" class="p-6 space-y-6">
         <Input
@@ -71,9 +71,9 @@
           <Button
             type="submit"
             :loading="loading"
-            loading-text="创建中..."
+            :loading-text="isEdit ? '保存中...' : '创建中...'"
           >
-            创建活动
+            {{ isEdit ? '保存修改' : '创建活动' }}
           </Button>
         </div>
       </form>
@@ -82,21 +82,34 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import Input from '~/components/form/Input.vue'
 import Button from '~/components/form/Button.vue'
 import Textarea from '~/components/form/Textarea.vue'
 
+interface EventData {
+  _id?: string
+  tl?: string
+  desc?: string
+  date?: string | Date
+  address?: string
+  city?: string
+  status?: string
+}
+
 interface Props {
   isOpen: boolean
+  eventData?: EventData | null
 }
 
 const props = defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'close'): void
-  (e: 'submit', data: any): void
+  (e: 'submit', eventId: string | null, data: any): void
 }>()
+
+const isEdit = computed(() => !!props.eventData?._id)
 
 const form = ref({
   tl: '',
@@ -117,12 +130,12 @@ const handleSubmit = async () => {
   successMessage.value = ''
 
   try {
-    emit('submit', {
+    emit('submit', props.eventData?._id || null, {
       ...form.value,
       date: new Date(form.value.date)
     })
   } catch (error: any) {
-    errorMessage.value = error.data?.message || '创建活动失败'
+    errorMessage.value = error.data?.message || (isEdit.value ? '更新活动失败' : '创建活动失败')
   } finally {
     loading.value = false
   }
@@ -134,20 +147,44 @@ const handleCancel = () => {
 }
 
 const resetForm = () => {
-  form.value = {
-    tl: '',
-    desc: '',
-    date: '',
-    address: '',
-    city: '',
-    status: 'draft'
+  if (!isEdit.value) {
+    form.value = {
+      tl: '',
+      desc: '',
+      date: '',
+      address: '',
+      city: '',
+      status: 'draft'
+    }
   }
   errorMessage.value = ''
   successMessage.value = ''
 }
 
+const initForm = () => {
+  if (props.eventData) {
+    form.value.tl = props.eventData.tl || ''
+    form.value.desc = props.eventData.desc || ''
+    form.value.date = props.eventData.date ? new Date(props.eventData.date).toISOString().split('T')[0] : ''
+    form.value.address = props.eventData.address || ''
+    form.value.city = props.eventData.city || ''
+    form.value.status = props.eventData.status || 'draft'
+  } else {
+    form.value = {
+      tl: '',
+      desc: '',
+      date: '',
+      address: '',
+      city: '',
+      status: 'draft'
+    }
+  }
+}
+
 watch(() => props.isOpen, (newVal) => {
-  if (!newVal) {
+  if (newVal) {
+    initForm()
+  } else {
     resetForm()
   }
 })

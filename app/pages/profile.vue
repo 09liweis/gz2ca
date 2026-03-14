@@ -78,10 +78,21 @@
             :error-message="eventsErrorMessage"
             empty-message="您还没有创建任何活动"
             :columns="1"
+            :show-actions="true"
+            @edit="handleEditEvent"
+            @delete="handleDeleteEvent"
           />
         </div>
       </div>
     </div>
+
+    <!-- Event Modal -->
+    <EventModal
+      :is-open="showEditModal"
+      :event-data="editingEvent"
+      @close="showEditModal = false"
+      @submit="handleUpdateEvent"
+    />
   </div>
 </template>
 
@@ -91,7 +102,8 @@ import Input from '~/components/form/Input.vue'
 import Button from '~/components/form/Button.vue'
 import Textarea from '~/components/form/Textarea.vue'
 import EventList from '~/components/event/EventList.vue'
-import { get, put } from '~/utils/http'
+import EventModal from '~/components/event/EventModal.vue'
+import { get, put, del } from '~/utils/http'
 import { useUser } from '~/composables/useAuth'
 
 const { user: globalUser } = useUser()
@@ -110,6 +122,8 @@ const eventsLoading = ref(false)
 const errorMessage = ref('')
 const successMessage = ref('')
 const eventsErrorMessage = ref('')
+const showEditModal = ref(false)
+const editingEvent = ref<any>(null)
 
 // Initialize form with global user data
 onMounted(() => {
@@ -157,6 +171,34 @@ const handleUpdateProfile = async () => {
     errorMessage.value = error.data?.message || '更新失败，请稍后重试'
   } finally {
     loading.value = false
+  }
+}
+
+const handleEditEvent = (event: any) => {
+  editingEvent.value = event
+  showEditModal.value = true
+}
+
+const handleUpdateEvent = async (eventId: string, data: any) => {
+  try {
+    await put(`/api/events/${eventId}`, data)
+    showEditModal.value = false
+    loadMyEvents()
+  } catch (error: any) {
+    throw error
+  }
+}
+
+const handleDeleteEvent = async (event: any) => {
+  if (!confirm('确定要删除这个活动吗？')) {
+    return
+  }
+
+  try {
+    await del(`/api/events/${event._id}`)
+    loadMyEvents()
+  } catch (error: any) {
+    alert('删除失败，请稍后重试')
   }
 }
 </script>
