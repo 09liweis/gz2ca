@@ -75,6 +75,7 @@ import { ref, onMounted } from 'vue'
 import Input from '~/components/form/Input.vue'
 import Button from '~/components/form/Button.vue'
 import Textarea from '~/components/form/Textarea.vue'
+import { get, put } from '~/utils/http'
 
 const form = ref({
   fn: '',
@@ -91,18 +92,7 @@ const successMessage = ref('')
 // Load existing profile
 const loadProfile = async () => {
   try {
-    const token = localStorage.getItem('token')
-    if (!token) {
-      errorMessage.value = '请先登录'
-      navigateTo('/login')
-      return
-    }
-
-    const response = await $fetch('/api/user/profile', {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
+    const response = await get('/api/user/profile')
 
     if (response.success && response.user) {
       form.value.fn = response.user.fn || ''
@@ -122,20 +112,7 @@ const handleUpdateProfile = async () => {
   successMessage.value = ''
 
   try {
-    const token = localStorage.getItem('token')
-    if (!token) {
-      errorMessage.value = '请先登录'
-      navigateTo('/login')
-      return
-    }
-
-    const response = await $fetch('/api/user/profile', {
-      method: 'PUT',
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-      body: form.value
-    })
+    await put('/api/user/profile', form.value)
 
     successMessage.value = '个人资料更新成功！'
 

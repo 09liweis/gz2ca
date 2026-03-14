@@ -85,6 +85,7 @@
 import { ref } from 'vue'
 import Input from '~/components/form/Input.vue'
 import Button from '~/components/form/Button.vue'
+import { post } from '~/utils/http'
 
 const form = ref({
   fn:'',
@@ -111,14 +112,11 @@ const handleSignup = async () => {
     }
 
     // Call signup API
-    const response = await $fetch('/api/auth/signup', {
-      method: 'POST',
-      body: {
-        fn: form.value.fn,
-        ln: form.value.ln,
-        email: form.value.email,
-        password: form.value.password
-      }
+    await post('/api/auth/signup', {
+      fn: form.value.fn,
+      ln: form.value.ln,
+      email: form.value.email,
+      password: form.value.password
     })
 
     successMessage.value = '注册成功！正在跳转到登录页面...'

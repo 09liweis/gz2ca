@@ -53,6 +53,7 @@
 import { ref } from 'vue'
 import Input from '~/components/form/Input.vue'
 import Button from '~/components/form/Button.vue'
+import { post } from '~/utils/http'
 
 const form = ref({
   email: '',
@@ -67,10 +68,7 @@ const handleLogin = async () => {
   errorMessage.value = ''
 
   try {
-    const response = await $fetch('/api/auth/login', {
-      method: 'POST',
-      body: form.value
-    })
+    const response = await post('/api/auth/login', form.value)
 
     if (response.success) {
       // Store token
