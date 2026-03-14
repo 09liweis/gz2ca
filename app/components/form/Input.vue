@@ -28,7 +28,7 @@
 interface Props {
   id?: string
   label?: string
-  type?: 'text' | 'email' | 'password' | 'number'
+  type?: 'text' | 'email' | 'password' | 'number' | 'date'
   modelValue?: string | number
   placeholder?: string
   required?: boolean
