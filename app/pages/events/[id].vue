@@ -80,6 +80,21 @@
               <h2 class="text-xl font-semibold text-gray-900 mb-4">组织者</h2>
               <EventOrganizer :organizer="organizer" />
             </div>
+
+            <hr v-if="isOwner" class="my-8 border-gray-200">
+
+            <!-- Image Upload (for owner) -->
+            <div v-if="isOwner">
+              <h2 class="text-xl font-semibold text-gray-900 mb-4">上传照片</h2>
+              <ImageUploader @upload="handleImageUpload" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Image Gallery -->
+        <div v-if="media.length > 0" class="bg-white rounded-xl shadow-lg overflow-hidden mt-8">
+          <div class="p-8">
+            <ImageGallery :media="media" :can-delete="isOwner" @delete="handleDeleteImage" />
           </div>
         </div>
       </div>
@@ -103,7 +118,9 @@ import Button from '~/components/form/Button.vue'
 import EventInfo from '~/components/event/EventInfo.vue'
 import EventOrganizer from '~/components/event/EventOrganizer.vue'
 import EventModal from '~/components/event/EventModal.vue'
-import { get, put } from '~/utils/http'
+import ImageUploader from '~/components/event/ImageUploader.vue'
+import ImageGallery from '~/components/event/ImageGallery.vue'
+import { get, post, del } from '~/utils/http'
 import { useUser } from '~/composables/useAuth'
 
 const route = useRoute()
@@ -112,7 +129,9 @@ const { user: currentUser } = useUser()
 
 const event = ref<any>(null)
 const organizer = ref<any>(null)
+const media = ref<any[]>([])
 const loading = ref(false)
+const mediaLoading = ref(false)
 const errorMessage = ref('')
 const showEditModal = ref(false)
 
@@ -139,6 +158,21 @@ const loadEvent = async () => {
   }
 }
 
+const loadMedia = async () => {
+  mediaLoading.value = true
+
+  try {
+    const response = await get(`/api/events/${route.params.id}/media`)
+    if (response.success) {
+      media.value = response.media
+    }
+  } catch (error: any) {
+    console.error('Failed to load media:', error)
+  } finally {
+    mediaLoading.value = false
+  }
+}
+
 const handleEdit = () => {
   showEditModal.value = true
 }
@@ -153,7 +187,51 @@ const handleUpdateEvent = async (eventId: string | null, data: any) => {
   }
 }
 
+const handleImageUpload = async (files: File[]) => {
+  try {
+    // Convert files to base64 for upload
+    const base64Files = await Promise.all(
+      files.map(async (file) => {
+        return new Promise((resolve) => {
+          const reader = new FileReader()
+          reader.onload = () => {
+            resolve({
+              name: file.name,
+              type: file.type,
+              size: file.size,
+              base64: (reader.result as string).split(',')[1]
+            })
+          }
+          reader.readAsDataURL(file)
+        })
+      })
+    )
+
+    await post('/api/media/upload', {
+      eventId: event.value._id,
+      files: base64Files
+    })
+
+    // Reload media list
+    loadMedia()
+  } catch (error: any) {
+    console.error('Upload failed:', error)
+    alert('上传失败: ' + (error.data?.message || error.message || '未知错误'))
+  }
+}
+
+const handleDeleteImage = async (item: any) => {
+  try {
+    await del(`/api/media/${item._id}`)
+    loadMedia()
+  } catch (error: any) {
+    console.error('Delete failed:', error)
+    alert('删除失败: ' + (error.data?.message || error.message || '未知错误'))
+  }
+}
+
 onMounted(() => {
   loadEvent()
+  loadMedia()
 })
 </script>
