@@ -26,6 +26,10 @@ export const User = defineMongooseModel('User', {
   role: {
     type: String,
   },
+  avt: {
+    type: String,
+    required: false
+  },
   graduationYear: {
     type: Number,
     required: false

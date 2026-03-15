@@ -3,12 +3,13 @@
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div class="flex flex-col sm:flex-row items-center gap-6">
         <!-- Avatar -->
-        <div class="relative">
-          <div class="w-32 h-32 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-5xl font-bold border-4 border-white/30 shadow-2xl">
-            {{ initials }}
-          </div>
-          <div class="absolute bottom-0 right-0 w-10 h-10 bg-green-500 rounded-full border-4 border-white shadow-lg"></div>
-        </div>
+        <AvatarUpload
+          :avatar-url="avatarUrl"
+          :user-name="name"
+          :initials="initials"
+          @update:avatar-url="$emit('update:avatarUrl', $event)"
+          @error="$emit('error', $event)"
+        />
 
         <!-- User Info -->
         <div class="flex-1 text-center sm:text-left">
@@ -45,7 +46,10 @@
 </template>
 
 <script setup lang="ts">
+import AvatarUpload from '~/components/profile/AvatarUpload.vue'
+
 interface Props {
+  avatarUrl?: string
   name: string
   email: string
   initials: string
@@ -55,4 +59,9 @@ interface Props {
 }
 
 defineProps<Props>()
+
+defineEmits<{
+  'update:avatarUrl': [url: string | undefined]
+  error: [message: string]
+}>()
 </script>

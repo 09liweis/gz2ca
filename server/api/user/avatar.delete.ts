@@ -1,6 +1,7 @@
-import { defineEventHandler, getCookie, readBody } from 'h3';
+import { defineEventHandler, getCookie } from 'h3';
 import { User } from '../../models/user.schema';
 import { verifyToken } from '../../utils/jwt';
+import { deleteFromR2, extractKeyFromUrl } from '../../utils/storage';
 
 export default defineEventHandler(async (event) => {
   const token = getCookie(event, 'token') || event.node.req.headers.authorization?.split(' ')[1];
@@ -21,22 +22,32 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    const body = await readBody(event);
-    const { fn, ln, graduationYear, location, bio, avt } = body;
+    const existingUser = await User.findById(user._id);
+    
+    if (!existingUser?.avt) {
+      throw createError({
+        statusCode: 400,
+        statusMessage: '用户没有头像'
+      });
+    }
 
-    // Update user profile
+    // Delete avatar from R2
+    try {
+      const key = extractKeyFromUrl(existingUser.avt);
+      await deleteFromR2(key);
+    } catch (error) {
+      console.error('Failed to delete avatar from R2:', error);
+      // Continue with user update even if delete fails
+    }
+
+    // Remove avatar URL from user
     const updatedUser = await User.findByIdAndUpdate(
       user._id,
       {
-        fn,
-        ln,
-        graduationYear,
-        location,
-        bio,
-        avt,
+        $unset: { avt: '' },
         mt: new Date()
       },
-      { new: true, runValidators: true }
+      { new: true }
     );
 
     if (!updatedUser) {
@@ -52,14 +63,14 @@ export default defineEventHandler(async (event) => {
 
     return {
       success: true,
-      message: '个人资料更新成功',
+      message: '头像删除成功',
       user: userResponse
     };
   } catch (error: any) {
-    console.error('Update profile error:', error);
+    console.error('Delete avatar error:', error);
     throw createError({
-      statusCode: 500,
-      statusMessage: error.message || '更新失败'
+      statusCode: error.statusCode || 500,
+      statusMessage: error.message || '删除失败'
     });
   }
 });

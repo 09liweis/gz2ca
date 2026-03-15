@@ -2,12 +2,15 @@
   <div class="min-h-screen bg-gray-50">
     <!-- Profile Header -->
     <ProfileHeader
+      :avatar-url="form.avt"
       :name="userName"
       :email="globalUser?.eml || ''"
       :initials="userInitials"
       :graduation-year="form.graduationYear"
       :location="form.location"
       :events-count="myEvents.length"
+      @update:avatar-url="form.avt = $event"
+      @error="handleAvatarError"
     />
 
     <!-- Tab Navigation -->
@@ -92,7 +95,8 @@ const form = ref({
   ln: '',
   graduationYear: '',
   location: '',
-  bio: ''
+  bio: '',
+  avt: ''
 })
 
 const myEvents = ref<any[]>([])
@@ -139,6 +143,7 @@ onMounted(() => {
     form.value.graduationYear = globalUser.value.graduationYear || ''
     form.value.location = globalUser.value.location || ''
     form.value.bio = globalUser.value.bio || ''
+    form.value.avt = globalUser.value.avt || ''
   }
   loadMyEvents()
 })
@@ -178,6 +183,13 @@ const handleUpdateProfile = async () => {
   } finally {
     loading.value = false
   }
+}
+
+const handleAvatarError = (message: string) => {
+  errorMessage.value = message
+  setTimeout(() => {
+    errorMessage.value = ''
+  }, 3000)
 }
 
 const handleEditEvent = (event: any) => {
