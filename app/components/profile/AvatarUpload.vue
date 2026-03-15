@@ -59,6 +59,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { post, del } from '~/utils/http'
+import { useUser } from '~/composables/useAuth'
 
 interface Props {
   avatarUrl?: string
@@ -74,6 +75,7 @@ const emit = defineEmits<{
   error: [message: string]
 }>()
 
+const { updateUser } = useUser()
 const fileInput = ref<HTMLInputElement | null>(null)
 const uploading = ref(false)
 
@@ -112,6 +114,8 @@ const handleFileChange = async (event: Event) => {
 
     if (response.success && response.user) {
       emit('update:avatarUrl', response.user.avt)
+      // Update global user state
+      updateUser(response.user)
     }
   } catch (error: any) {
     emit('error', error.message || '上传失败，请稍后重试')
@@ -130,8 +134,12 @@ const handleRemoveAvatar = async () => {
   }
 
   try {
-    await del('/api/user/avatar')
+    const response = await del('/api/user/avatar')
     emit('update:avatarUrl', undefined)
+    // Update global user state
+    if (response.user) {
+      updateUser(response.user)
+    }
   } catch (error: any) {
     emit('error', '删除失败，请稍后重试')
   }

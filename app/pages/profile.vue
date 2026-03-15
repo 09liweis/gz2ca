@@ -61,7 +61,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch, h } from 'vue'
 import ProfileHeader from '~/components/profile/ProfileHeader.vue'
 import ProfileTabs from '~/components/profile/ProfileTabs.vue'
 import ProfileForm from '~/components/profile/ProfileForm.vue'
@@ -69,6 +69,8 @@ import ProfileEvents from '~/components/profile/ProfileEvents.vue'
 import EventModal from '~/components/event/EventModal.vue'
 import { get, put, del } from '~/utils/http'
 import { useUser } from '~/composables/useAuth'
+
+const { user: globalUser, loading: authLoading, updateUser } = useUser()
 
 const ProfileIcon = () => h('svg', {
   'stroke-linecap': 'round',
@@ -85,8 +87,6 @@ const CalendarIcon = () => h('svg', {
 }, [
   h('path', { d: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z' })
 ])
-
-const { user: globalUser } = useUser()
 
 const activeTab = ref<'profile' | 'events'>('profile')
 
@@ -108,7 +108,7 @@ const eventsErrorMessage = ref('')
 const showEditModal = ref(false)
 const editingEvent = ref<any>(null)
 
-const tabs = [
+const tabs = computed(() => [
   {
     id: 'profile',
     label: '个人资料',
@@ -120,7 +120,7 @@ const tabs = [
     icon: CalendarIcon,
     count: myEvents.value.length
   }
-]
+])
 
 const userName = computed(() => {
   if (form.value.fn || form.value.ln) {
@@ -135,16 +135,20 @@ const userInitials = computed(() => {
   return (ln[0] || '') + (fn[0] || '') || '用'
 })
 
+// Update form when global user changes
+watch(globalUser, (newUser) => {
+  if (newUser) {
+    form.value.fn = newUser.fn || ''
+    form.value.ln = newUser.ln || ''
+    form.value.graduationYear = newUser.graduationYear || ''
+    form.value.location = newUser.location || ''
+    form.value.bio = newUser.bio || ''
+    form.value.avt = newUser.avt || ''
+  }
+}, { immediate: true })
+
 // Initialize form with global user data
 onMounted(() => {
-  if (globalUser.value) {
-    form.value.fn = globalUser.value.fn || ''
-    form.value.ln = globalUser.value.ln || ''
-    form.value.graduationYear = globalUser.value.graduationYear || ''
-    form.value.location = globalUser.value.location || ''
-    form.value.bio = globalUser.value.bio || ''
-    form.value.avt = globalUser.value.avt || ''
-  }
   loadMyEvents()
 })
 
@@ -171,9 +175,14 @@ const handleUpdateProfile = async () => {
   successMessage.value = ''
 
   try {
-    await put('/api/user/profile', form.value)
+    const response = await put('/api/user/profile', form.value)
 
     successMessage.value = '个人资料更新成功！'
+
+    // Update global user state
+    if (response.user) {
+      updateUser(response.user)
+    }
 
     setTimeout(() => {
       successMessage.value = ''

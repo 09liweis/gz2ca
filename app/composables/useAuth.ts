@@ -9,6 +9,7 @@ interface User {
   graduationYear?: string
   location?: string
   bio?: string
+  avt?: string
   role?: string
 }
 
@@ -40,7 +41,7 @@ export const initAuth = async () => {
   try {
     const response = await get('/api/user/profile')
     if (response.success && response.user) {
-      user.value = response.user
+      user.value = response.user as User
     }
   } catch (error) {
     // Token might be invalid, clear it
@@ -50,6 +51,13 @@ export const initAuth = async () => {
   } finally {
     loading.value = false
     initialized.value = true
+  }
+}
+
+// Update user data
+export const updateUser = (userData: Partial<User>) => {
+  if (user.value) {
+    user.value = { ...user.value, ...userData }
   }
 }
 
@@ -69,5 +77,6 @@ export const useUser = () => ({
   isLoggedIn,
   userName,
   initAuth,
+  updateUser,
   logout
 })
