@@ -31,12 +31,14 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import Button from '~/components/form/Button.vue'
 import EventList from '~/components/event/EventList.vue'
 import EventModal from '~/components/event/EventModal.vue'
 import { get, post } from '~/utils/http'
 import { useUser } from '~/composables/useAuth'
 
+const router = useRouter()
 const { isLoggedIn } = useUser()
 
 const loading = ref(false)
@@ -64,10 +66,12 @@ const loadEvents = async () => {
 // Create event
 const handleCreateEvent = async (eventId: string | null, data: any) => {
   try {
-    await post('/api/events', data)
+    const response = await post('/api/events', data)
 
-    showCreateModal.value = false
-    loadEvents()
+    if (response.success && response.event) {
+      showCreateModal.value = false
+      router.push(`/events/${response.event._id}`)
+    }
   } catch (error: any) {
     throw error
   }
