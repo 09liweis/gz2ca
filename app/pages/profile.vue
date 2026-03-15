@@ -358,4 +358,12 @@ const handleDeleteEvent = async (event: any) => {
     alert('删除失败，请稍后重试')
   }
 }
+
+useHead({
+  title: '个人资料 - 广州二中加拿大生活',
+  meta: [
+    { name: 'description', content: '查看和管理您的个人资料，更新您在加拿大的信息。' },
+    { name: 'robots', content: 'noindex, nofollow' }
+  ]
+})
 </script>

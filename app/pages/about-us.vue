@@ -248,8 +248,14 @@
 </template>
 
 <script setup lang="ts">
-// Page meta
-definePageMeta({
-  layout: 'default'
+useHead({
+  title: '关于我们 - 广州二中加拿大生活',
+  meta: [
+    { name: 'description', content: '了解广州二中加拿大生活的使命、愿景和价值观。我们致力于为在加拿大的广州二中校友提供一个温暖的交流、互助和发展平台。' },
+    { name: 'keywords', content: '广州二中加拿大生活, 关于我们, 使命, 愿景, 价值观, 校友社区' },
+    { property: 'og:title', content: '关于我们 - 广州二中加拿大生活' },
+    { property: 'og:description', content: '广州二中加拿大生活是一个充满活力的校友社区，致力于为在加拿大的广州二中校友提供交流、互助和发展的平台' },
+    { property: 'og:type', content: 'website' }
+  ]
 })
 </script>

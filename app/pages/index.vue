@@ -70,3 +70,19 @@
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+useHead({
+  title: '广州二中加拿大生活 - 校友社区',
+  meta: [
+    { name: 'description', content: '广州二中加拿大生活是广州二中校友在加拿大的官方社区平台，提供校友联系、活动组织、经验分享等服务。' },
+    { name: 'keywords', content: '广州二中, 加拿大, 校友, 社区, 活动, 联系, 经验分享' },
+    { property: 'og:title', content: '广州二中加拿大生活 - 校友社区' },
+    { property: 'og:description', content: '这里是广州二中校友在加拿大的精神家园。我们在这里分享生活、组织活动、建立联系，共同书写在异国他乡的精彩篇章。' },
+    { property: 'og:type', content: 'website' },
+    { name: 'twitter:card', content: 'summary_large_image' },
+    { name: 'twitter:title', content: '广州二中加拿大生活 - 校友社区' },
+    { name: 'twitter:description', content: '这里是广州二中校友在加拿大的精神家园。我们在这里分享生活、组织活动、建立联系，共同书写在异国他乡的精彩篇章。' }
+  ]
+})
+</script>

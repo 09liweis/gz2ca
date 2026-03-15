@@ -13,4 +13,20 @@ export default defineNuxtConfig({
     modelsDir: 'models',
     devtools: true,
   },
+  app: {
+    head: {
+      htmlAttrs: {
+        lang: 'zh-CN'
+      },
+      meta: [
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        { name: 'charset', content: 'UTF-8' },
+        { name: 'format-detection', content: 'telephone=no' },
+        { name: 'theme-color', content: '#2563eb' }
+      ],
+      link: [
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      ]
+    }
+  }
 })

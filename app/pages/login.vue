@@ -91,4 +91,12 @@ const handleLogin = async () => {
     loading.value = false
   }
 }
+
+useHead({
+  title: '登录 - 广州二中加拿大生活',
+  meta: [
+    { name: 'description', content: '登录广州二中加拿大生活社区账号，参与校友活动，建立联系。' },
+    { name: 'robots', content: 'noindex, nofollow' }
+  ]
+})
 </script>

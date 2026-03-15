@@ -155,4 +155,15 @@ const handleCreateEvent = async (eventId: string | null, data: any) => {
 onMounted(() => {
   loadEvents()
 })
+
+useHead({
+  title: '活动 - 广州二中加拿大生活',
+  meta: [
+    { name: 'description', content: '查看广州二中加拿大社区的所有活动。我们定期组织聚会、讲座、户外活动等，让校友们在异国他乡也能感受家的温暖。' },
+    { name: 'keywords', content: '广州二中, 加拿大, 活动, 聚会, 讲座, 户外活动, 校友活动' },
+    { property: 'og:title', content: '活动 - 广州二中加拿大生活' },
+    { property: 'og:description', content: '查看广州二中加拿大社区的所有活动，参加校友聚会，分享精彩时光' },
+    { property: 'og:type', content: 'website' }
+  ]
+})
 </script>
