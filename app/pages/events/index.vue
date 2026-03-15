@@ -1,19 +1,82 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between items-center mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">活动</h1>
-        <Button
-          v-if="isLoggedIn"
-          @click="showCreateModal = true"
-          variant="primary"
-        >
-          创建活动
-        </Button>
+  <div class="min-h-screen bg-gray-50">
+    <!-- Hero Section -->
+    <div class="bg-gradient-to-r from-blue-600 to-cyan-500 text-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="text-center">
+          <h1 class="text-4xl md:text-5xl font-bold mb-4">校友活动</h1>
+          <p class="text-xl text-blue-50 max-w-2xl mx-auto mb-8">
+            探索精彩活动，与广州二中校友共同创造美好回忆
+          </p>
+          <Button
+            v-if="isLoggedIn"
+            @click="showCreateModal = true"
+            variant="primary"
+            class="bg-white text-blue-600 hover:bg-blue-50 px-8 py-3 text-lg font-semibold shadow-lg"
+          >
+            <svg class="w-5 h-5 inline-block mr-2 -mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            创建活动
+          </Button>
+        </div>
       </div>
+    </div>
 
+    <!-- Filter & Sort Section -->
+    <div class="bg-white border-b shadow-sm sticky top-0 z-10">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+          <div class="flex items-center gap-2 text-sm text-gray-600">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <span class="font-medium">{{ displayedEvents.length }}</span> 个活动
+          </div>
+
+          <div class="flex gap-3">
+            <button
+              @click="filterView = 'all'"
+              :class="[
+                'px-4 py-2 rounded-lg text-sm font-medium transition-colors',
+                filterView === 'all'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              ]"
+            >
+              全部
+            </button>
+            <button
+              @click="filterView = 'upcoming'"
+              :class="[
+                'px-4 py-2 rounded-lg text-sm font-medium transition-colors',
+                filterView === 'upcoming'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              ]"
+            >
+              即将举行
+            </button>
+            <button
+              @click="filterView = 'past'"
+              :class="[
+                'px-4 py-2 rounded-lg text-sm font-medium transition-colors',
+                filterView === 'past'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              ]"
+            >
+              往期活动
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Events Grid -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <EventList
-        :events="events"
+        :events="displayedEvents"
         :loading="loading"
         :error-message="errorMessage"
         empty-message="还没有创建任何活动"
@@ -30,8 +93,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { ref, computed, onMounted } from 'vue'
 import Button from '~/components/form/Button.vue'
 import EventList from '~/components/event/EventList.vue'
 import EventModal from '~/components/event/EventModal.vue'
@@ -45,8 +108,21 @@ const loading = ref(false)
 const errorMessage = ref('')
 const events = ref<any[]>([])
 const showCreateModal = ref(false)
+const filterView = ref<'all' | 'upcoming' | 'past'>('all')
 
-// Load events
+const displayedEvents = computed(() => {
+  const now = new Date()
+
+  switch (filterView.value) {
+    case 'upcoming':
+      return events.value.filter(event => new Date(event.date) >= now)
+    case 'past':
+      return events.value.filter(event => new Date(event.date) < now)
+    default:
+      return events.value
+  }
+})
+
 const loadEvents = async () => {
   loading.value = true
   errorMessage.value = ''
@@ -63,7 +139,6 @@ const loadEvents = async () => {
   }
 }
 
-// Create event
 const handleCreateEvent = async (eventId: string | null, data: any) => {
   try {
     const response = await post('/api/events', data)
