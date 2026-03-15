@@ -2,6 +2,7 @@ import { defineEventHandler, getCookie, readMultipartFormData } from 'h3';
 import { User } from '../../models/user.schema';
 import { verifyToken } from '../../utils/jwt';
 import { uploadToR2, deleteFromR2, extractKeyFromUrl } from '../../utils/storage';
+import { resizeAndOptimizeImage } from '../../utils/image';
 
 export default defineEventHandler(async (event) => {
   const token = getCookie(event, 'token') || event.node.req.headers.authorization?.split(' ')[1];
@@ -51,7 +52,7 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    // Validate file size (max 5MB)
+    // Validate file size (max 5MB before optimization)
     const maxSize = 5 * 1024 * 1024;
     if (fileData.data.length > maxSize) {
       throw createError({
@@ -59,6 +60,9 @@ export default defineEventHandler(async (event) => {
         statusMessage: '图片大小不能超过 5MB'
       });
     }
+
+    // Resize and optimize image to max 50KB
+    const optimizedBuffer = await resizeAndOptimizeImage(fileData.data, 50, 200);
 
     // Delete old avatar if exists
     const existingUser = await User.findById(user._id);
@@ -74,11 +78,10 @@ export default defineEventHandler(async (event) => {
 
     // Generate unique key for avatar
     const timestamp = Date.now();
-    const ext = getFileExtension(fileData.filename || 'jpg');
-    const key = `avatars/${user._id}_${timestamp}.${ext}`;
+    const key = `avatars/${user._id}_${timestamp}.jpg`;
 
-    // Convert Buffer to File
-    const file = new File([fileData.data], fileData.filename || 'avatar.jpg', { type: fileType });
+    // Convert optimized Buffer to File
+    const file = new File([optimizedBuffer], 'avatar.jpg', { type: 'image/jpeg' });
 
     // Upload to R2 (no thumbnail for avatar)
     const result = await uploadToR2(file, key, false);
@@ -117,8 +120,3 @@ export default defineEventHandler(async (event) => {
     });
   }
 });
-
-function getFileExtension(filename: string): string {
-  const ext = filename.split('.').pop();
-  return ext || 'jpg';
-}
