@@ -31,8 +31,8 @@ const props = withDefaults(defineProps<Props>(), {
 
 const variantClasses = computed(() => {
   const variants = {
-    primary: 'bg-blue-600 text-white hover:bg-blue-700',
-    secondary: 'border border-blue-600 text-blue-600 hover:bg-blue-50',
+    primary: 'bg-[#b78026] text-white hover:bg-[#b78026]/50',
+    secondary: 'border border-[#b78026] text-[#b78026] hover:bg-[#b78026]/50',
     danger: 'bg-red-600 text-white hover:bg-red-700'
   }
   return variants[props.variant]
