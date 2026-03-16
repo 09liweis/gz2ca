@@ -18,11 +18,19 @@
             :key="menu.to"
             :to="menu.to"
             variant="text-primary"
-            class="!px-3 !py-2 !text-gray-700 hover:!text-primary !rounded-none relative group"
+            :class="[
+              '!px-3 !py-2 !rounded-none relative group',
+              isActiveRoute(menu.to)
+                ? '!text-primary font-semibold'
+                : '!text-gray-700 hover:!text-primary'
+            ]"
           >
             {{ menu.label }}
             <span
-              class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#11817b] group-hover:w-full transition-all duration-300"></span>
+              :class="[
+                'absolute bottom-0 left-0 h-0.5 bg-[#11817b] transition-all duration-300',
+                isActiveRoute(menu.to) ? 'w-full' : 'w-0 group-hover:w-full'
+              ]"></span>
           </LinkButton>
         </div>
 
@@ -70,7 +78,12 @@
           @click="handleMobileMenuClick"
           :to="menu.to"
           variant="text-primary"
-          class="!block !px-4 !py-2 !text-gray-700 hover:!bg-primary/10 rounded-lg"
+          :class="[
+            '!block !px-4 !py-2 rounded-lg',
+            isActiveRoute(menu.to)
+              ? '!text-[#11817b] !bg-[#11817b]/10 font-semibold'
+              : '!text-gray-700 hover:!bg-[#11817b]/10'
+          ]"
         >
           {{ menu.label }}
         </LinkButton>
@@ -98,10 +111,12 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
+import { useRoute } from 'vue-router'
 import { useUser } from '~/composables/useAuth'
 import Button from '~/components/form/Button.vue'
 import LinkButton from '~/components/form/LinkButton.vue'
 
+const route = useRoute()
 const { isLoggedIn, userName, initAuth, logout } = useUser()
 const isOpen = ref(false)
 
@@ -110,6 +125,10 @@ const navigationMenus = computed(() => [
   { label: '关于我们', to: '/about-us' },
   { label: '活动', to: '/events' }
 ])
+
+const isActiveRoute = (path: string) => {
+  return route.path === path
+}
 
 const handleLogout = () => {
   logout()
