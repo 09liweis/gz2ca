@@ -61,18 +61,24 @@
 
       <!-- Actions for Owner -->
       <div v-if="showActions" class="flex gap-2 pt-4 border-t" @click.stop>
-        <button
+        <Button
+          type="button"
+          variant="secondary"
           @click="$emit('edit', event)"
-          class="flex-1 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors text-sm font-medium"
+          class="flex-1 !px-4 !py-2 !bg-blue-50 !text-blue-600 hover:!bg-blue-100 text-sm font-medium !border-0 !rounded-lg"
+          :full-width="false"
         >
           编辑
-        </button>
-        <button
+        </Button>
+        <Button
+          type="button"
+          variant="danger"
           @click="$emit('delete', event)"
-          class="flex-1 px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors text-sm font-medium"
+          class="flex-1 !px-4 !py-2 text-sm font-medium !rounded-lg"
+          :full-width="false"
         >
           删除
-        </button>
+        </Button>
       </div>
 
       <!-- View Details Arrow -->

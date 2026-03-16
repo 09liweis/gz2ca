@@ -34,39 +34,33 @@
           </div>
 
           <div class="flex gap-3">
-            <button
+            <Button
+              type="button"
               @click="filterView = 'all'"
-              :class="[
-                'px-4 py-2 rounded-lg text-sm font-medium transition-colors',
-                filterView === 'all'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              ]"
+              class="!px-4 !py-2 text-sm font-medium !rounded-lg"
+              :class="filterView === 'all' ? '!bg-blue-600 !text-white' : '!bg-gray-100 !text-gray-700 hover:!bg-gray-200'"
+              :full-width="false"
             >
               全部
-            </button>
-            <button
+            </Button>
+            <Button
+              type="button"
               @click="filterView = 'upcoming'"
-              :class="[
-                'px-4 py-2 rounded-lg text-sm font-medium transition-colors',
-                filterView === 'upcoming'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              ]"
+              class="!px-4 !py-2 text-sm font-medium !rounded-lg"
+              :class="filterView === 'upcoming' ? '!bg-blue-600 !text-white' : '!bg-gray-100 !text-gray-700 hover:!bg-gray-200'"
+              :full-width="false"
             >
               即将举行
-            </button>
-            <button
+            </Button>
+            <Button
+              type="button"
               @click="filterView = 'past'"
-              :class="[
-                'px-4 py-2 rounded-lg text-sm font-medium transition-colors',
-                filterView === 'past'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              ]"
+              class="!px-4 !py-2 text-sm font-medium !rounded-lg"
+              :class="filterView === 'past' ? '!bg-blue-600 !text-white' : '!bg-gray-100 !text-gray-700 hover:!bg-gray-200'"
+              :full-width="false"
             >
               往期活动
-            </button>
+            </Button>
           </div>
         </div>
       </div>

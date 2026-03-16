@@ -54,14 +54,20 @@
         </div>
 
         <!-- Mobile menu button -->
-        <button @click="isOpen = !isOpen" class="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors">
-          <svg v-if="!isOpen" class="w-6 h-6 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <Button
+          type="button"
+          variant="secondary"
+          @click="isOpen = !isOpen"
+          class="md:hidden !p-2 !border-0 !bg-transparent !rounded-lg hover:!bg-gray-100 !text-gray-900"
+          :full-width="false"
+        >
+          <svg v-if="!isOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
-          <svg v-else class="w-6 h-6 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg v-else class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
-        </button>
+        </Button>
       </div>
 
       <!-- Mobile menu -->

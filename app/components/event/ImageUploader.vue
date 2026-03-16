@@ -29,14 +29,17 @@
     <div v-if="previewImages.length > 0" class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
       <div v-for="(image, index) in previewImages" :key="index" class="relative group">
         <img :src="image.preview" class="w-full h-32 object-cover rounded-lg shadow" />
-        <button
+        <Button
+          type="button"
+          variant="danger"
           @click.stop="removeImage(index)"
-          class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+          class="absolute top-1 right-1 !w-6 !h-6 !p-0 !rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+          :full-width="false"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
-        </button>
+        </Button>
         <div v-if="image.uploading" class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-lg">
           <div class="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
         </div>
@@ -47,6 +50,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import Button from '~/components/form/Button.vue'
 
 interface PreviewImage {
   file: File

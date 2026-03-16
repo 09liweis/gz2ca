@@ -3,7 +3,9 @@
     :type="type"
     :disabled="disabled || loading"
     :class="[
-      'w-full py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed',
+      'py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed',
+      fullWidth ? 'w-full' : '',
+      customClass,
       variantClasses
     ]"
   >
@@ -19,6 +21,8 @@ interface Props {
   disabled?: boolean
   loading?: boolean
   loadingText?: string
+  fullWidth?: boolean
+  customClass?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -26,7 +30,9 @@ const props = withDefaults(defineProps<Props>(), {
   variant: 'primary',
   disabled: false,
   loading: false,
-  loadingText: '加载中...'
+  loadingText: '加载中...',
+  fullWidth: true,
+  customClass: ''
 })
 
 const variantClasses = computed(() => {

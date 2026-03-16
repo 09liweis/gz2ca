@@ -34,16 +34,18 @@
     </div>
 
     <!-- Remove Avatar Button -->
-    <button
+    <Button
       v-if="avatarUrl && !uploading"
       @click.stop="handleRemoveAvatar"
-      class="absolute -bottom-1 -right-1 w-8 h-8 bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center text-white shadow-lg transition-colors"
+      variant="danger"
+      class="absolute -bottom-1 -right-1 w-8 h-8 !p-0 rounded-full flex items-center justify-center shadow-lg"
       title="删除头像"
+      :full-width="false"
     >
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
       </svg>
-    </button>
+    </Button>
 
     <!-- Hidden File Input -->
     <input
@@ -60,6 +62,7 @@
 import { ref } from 'vue'
 import { post, del } from '~/utils/http'
 import { useUser } from '~/composables/useAuth'
+import Button from '~/components/form/Button.vue'
 
 interface Props {
   avatarUrl?: string
