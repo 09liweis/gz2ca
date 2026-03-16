@@ -33,7 +33,7 @@
         <!-- Auth Section Desktop -->
         <div class="hidden md:flex items-center gap-4">
           <template v-if="isLoggedIn">
-              <LinkButton to="/profile" variant="text-primary" class="!px-3 !py-2 !text-gray-700 hover:!bg-gray-100">
+              <LinkButton to="/profile" variant="text-primary">
                 {{ userName }}
               </LinkButton>
               <div class="w-px h-6 bg-gray-200"></div>
@@ -81,7 +81,7 @@
         <!-- Mobile Auth Section -->
         <div class="border-t border-gray-200 pt-3">
           <template v-if="isLoggedIn">
-            <LinkButton @click.native="isOpen = false" to="/profile" variant="text-primary" class="!block !px-4 !py-2 !text-gray-700 hover:!bg-primary/10 rounded-lg">
+            <LinkButton @click.native="isOpen = false" to="/profile" variant="text-primary">
               {{ userName }}
             </LinkButton>
             <Button type="button" @click="handleLogout" variant="danger">
