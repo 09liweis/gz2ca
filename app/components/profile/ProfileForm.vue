@@ -1,7 +1,7 @@
 <template>
   <div class="max-w-3xl mx-auto">
     <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-      <div class="bg-gradient-to-r from-blue-600 to-cyan-500 px-8 py-6">
+      <div class="bg-[#11817b] px-8 py-6">
         <h2 class="text-2xl font-bold text-white">编辑个人资料</h2>
         <p class="text-blue-100 mt-1">完善您的个人信息，让校友更好地了解您</p>
       </div>

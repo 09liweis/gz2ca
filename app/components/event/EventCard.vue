@@ -4,7 +4,7 @@
     @click="handleClick"
   >
     <!-- Gradient Header -->
-    <div class="h-2 bg-gradient-to-r from-blue-500 to-cyan-400"></div>
+    <div class="h-2 bg-[#11817b]"></div>
 
     <!-- Card Content -->
     <div class="p-6">

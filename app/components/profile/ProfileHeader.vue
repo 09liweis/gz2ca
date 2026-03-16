@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gradient-to-r from-blue-600 to-cyan-500 text-white">
+  <div class="bg-[#11817b] text-white">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div class="flex flex-col sm:flex-row items-center gap-6">
         <!-- Avatar -->

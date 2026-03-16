@@ -5,7 +5,7 @@
         <!-- Logo -->
         <NuxtLink to="/" class="flex items-center space-x-3 group">
           <div
-            class="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center transform group-hover:scale-105 transition-transform">
+            class="w-10 h-10 bg-[#11817b] rounded-lg flex items-center justify-center transform group-hover:scale-105 transition-transform">
             <span class="text-white font-bold text-lg">G</span>
           </div>
           <span class="font-semibold text-gray-900 hidden sm:inline">广州二中加拿大</span>
@@ -47,7 +47,7 @@
           </template>
           <template v-else>
             <NuxtLink to="/login"
-              class="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:shadow-lg hover:shadow-blue-600/20 transform hover:scale-105 transition-all duration-200 font-medium">
+              class="px-6 py-2.5 bg-[#11817b] text-white rounded-lg hover:shadow-lg hover:shadow-primary/20 transform hover:scale-105 transition-all duration-200 font-medium">
               登录
             </NuxtLink>
           </template>
@@ -99,7 +99,7 @@
           </template>
           <template v-else>
             <NuxtLink @click="isOpen = false" to="/login"
-              class="block px-4 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:shadow-lg transition-all font-medium text-center">
+              class="block px-4 py-2.5 bg-[#11817b] text-white rounded-lg hover:shadow-lg transition-all font-medium text-center">
               登录
             </NuxtLink>
           </template>
