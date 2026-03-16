@@ -1,24 +1,19 @@
 import { Media } from '../../models/media.schema'
 import { deleteFromR2, extractKeyFromUrl } from '../../utils/storage'
+import { handleBadRequest, handleNotFound, handleInternalError } from '../../utils/error'
 
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')
 
   if (!id) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: '媒体ID不能为空'
-    })
+    handleBadRequest('媒体ID不能为空')
   }
 
   try {
     const media = await Media.findById(id)
 
     if (!media) {
-      throw createError({
-        statusCode: 404,
-        statusMessage: '媒体不存在'
-      })
+      handleNotFound('媒体不存在')
     }
 
     // Delete from R2
@@ -37,9 +32,6 @@ export default defineEventHandler(async (event) => {
       throw error
     }
     console.error('Delete error:', error)
-    throw createError({
-      statusCode: 500,
-      statusMessage: error.message || '删除失败'
-    })
+    handleInternalError(error.message || '删除失败')
   }
 })

@@ -2,6 +2,7 @@ import { defineEventHandler, setCookie } from 'h3';
 import { User } from '../../models/user.schema';
 import { comparePassword } from '../../utils/password';
 import { getLoginToken } from '../../utils/jwt';
+import { handleBadRequest, handleUnauthorized, handleInternalError } from '../../utils/error';
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
@@ -9,29 +10,20 @@ export default defineEventHandler(async (event) => {
 
   // Basic validation
   if (!email || !password) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: '邮箱和密码为必填项'
-    });
+    handleBadRequest('邮箱和密码为必填项');
   }
 
   try {
     // Find user by email
     const user = await User.findOne({ eml: email });
     if (!user) {
-      throw createError({
-        statusCode: 401,
-        statusMessage: '邮箱或密码错误'
-      });
+      handleUnauthorized('邮箱或密码错误');
     }
 
     // Verify password
     const isPasswordValid = await comparePassword(password, user.pwd);
     if (!isPasswordValid) {
-      throw createError({
-        statusCode: 401,
-        statusMessage: '邮箱或密码错误'
-      });
+      handleUnauthorized('邮箱或密码错误');
     }
 
     // Update last login time
@@ -64,9 +56,6 @@ export default defineEventHandler(async (event) => {
     if (error.statusCode) {
       throw error;
     }
-    throw createError({
-      statusCode: 500,
-      statusMessage: '登录失败，请稍后重试'
-    });
+    handleInternalError('登录失败，请稍后重试');
   }
 });

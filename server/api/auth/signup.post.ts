@@ -1,6 +1,7 @@
 import { defineEventHandler, readBody, setCookie } from 'h3';
 import { User } from '../../models/user.schema';
 import { hashPassword } from '../../utils/password';
+import { handleBadRequest, handleInternalError } from '../../utils/error';
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
@@ -8,37 +9,25 @@ export default defineEventHandler(async (event) => {
 
   // Basic validation
   if (!email || !password) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: '邮箱和密码为必填项'
-    });
+    handleBadRequest('邮箱和密码为必填项');
   }
 
   // Validate email format
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: '邮箱格式不正确'
-    });
+    handleBadRequest('邮箱格式不正确');
   }
 
   // Validate password strength (minimum 6 characters)
   if (password.length < 6) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: '密码长度至少为6位'
-    });
+    handleBadRequest('密码长度至少为6位');
   }
 
   try {
     // Check if user already exists
     const existingUser = await User.findOne({ eml: email });
     if (existingUser) {
-      throw createError({
-        statusCode: 400,
-        statusMessage: '该邮箱已被注册'
-      });
+      handleBadRequest('该邮箱已被注册');
     }
 
     // Hash password with bcrypt
@@ -70,9 +59,6 @@ export default defineEventHandler(async (event) => {
     if (error.statusCode) {
       throw error;
     }
-    throw createError({
-      statusCode: 500,
-      statusMessage: '注册失败，请稍后重试'
-    });
+    handleInternalError('注册失败，请稍后重试');
   }
 });

@@ -3,62 +3,45 @@ import { User } from '../../models/user.schema';
 import { verifyToken } from '../../utils/jwt';
 import { uploadToR2, deleteFromR2, extractKeyFromUrl } from '../../utils/storage';
 import { resizeAndOptimizeImage } from '../../utils/image';
+import { handleUnauthorized, handleBadRequest, handleNotFound, handleInternalError } from '../../utils/error';
 
 export default defineEventHandler(async (event) => {
   const token = getCookie(event, 'token') || event.node.req.headers.authorization?.split(' ')[1];
 
   if (!token) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: '未授权访问'
-    });
+    handleUnauthorized();
   }
 
   try {
     const user = await verifyToken(token);
     if (!user || !user._id) {
-      throw createError({
-        statusCode: 401,
-        statusMessage: '用户不存在'
-      });
+      handleUnauthorized('用户不存在');
     }
 
     const formData = await readMultipartFormData(event);
-    
+
     if (!formData || formData.length === 0) {
-      throw createError({
-        statusCode: 400,
-        statusMessage: '未上传文件'
-      });
+      handleBadRequest('未上传文件');
     }
 
     const fileData = formData.find(item => item.name === 'avatar');
-    
+
     if (!fileData || !fileData.data) {
-      throw createError({
-        statusCode: 400,
-        statusMessage: '未找到头像文件'
-      });
+      handleBadRequest('未找到头像文件');
     }
 
     // Validate file type
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
     const fileType = fileData.type || 'image/jpeg';
-    
+
     if (!allowedTypes.includes(fileType)) {
-      throw createError({
-        statusCode: 400,
-        statusMessage: '只支持图片格式 (JPEG, PNG, GIF, WebP)'
-      });
+      handleBadRequest('只支持图片格式 (JPEG, PNG, GIF, WebP)');
     }
 
     // Validate file size (max 5MB before optimization)
     const maxSize = 5 * 1024 * 1024;
     if (fileData.data.length > maxSize) {
-      throw createError({
-        statusCode: 400,
-        statusMessage: '图片大小不能超过 5MB'
-      });
+      handleBadRequest('图片大小不能超过 5MB');
     }
 
     // Resize and optimize image to max 50KB
@@ -97,10 +80,7 @@ export default defineEventHandler(async (event) => {
     );
 
     if (!updatedUser) {
-      throw createError({
-        statusCode: 404,
-        statusMessage: '用户不存在'
-      });
+      handleNotFound('用户不存在');
     }
 
     // Remove password from response
@@ -114,9 +94,6 @@ export default defineEventHandler(async (event) => {
     };
   } catch (error: any) {
     console.error('Upload avatar error:', error);
-    throw createError({
-      statusCode: error.statusCode || 500,
-      statusMessage: error.message || '上传失败'
-    });
+    handleInternalError(error.message || '上传失败');
   }
 });

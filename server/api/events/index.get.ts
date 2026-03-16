@@ -1,5 +1,6 @@
 import { defineEventHandler } from 'h3';
 import { Event } from '../../models/event.schema';
+import { handleInternalError } from '../../utils/error';
 
 export default defineEventHandler(async (event) => {
   try {
@@ -14,9 +15,6 @@ export default defineEventHandler(async (event) => {
     };
   } catch (error: any) {
     console.error('Get events error:', error);
-    throw createError({
-      statusCode: 500,
-      statusMessage: '获取活动失败'
-    });
+    handleInternalError('获取活动失败');
   }
 });

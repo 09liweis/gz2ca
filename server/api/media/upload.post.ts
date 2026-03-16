@@ -1,22 +1,17 @@
 import { Media } from '../../models/media.schema'
 import { uploadToR2 } from '../../utils/storage'
+import { handleBadRequest, handleInternalError } from '../../utils/error'
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
   const { eventId, files } = body
 
   if (!eventId) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: '活动ID不能为空'
-    })
+    handleBadRequest('活动ID不能为空')
   }
 
   if (!files || !Array.isArray(files) || files.length === 0) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: '请至少上传一张图片'
-    })
+    handleBadRequest('请至少上传一张图片')
   }
 
   try {
@@ -57,9 +52,6 @@ export default defineEventHandler(async (event) => {
     }
   } catch (error: any) {
     console.error('Upload error:', error)
-    throw createError({
-      statusCode: 500,
-      statusMessage: error.message || '上传失败'
-    })
+    handleInternalError(error.message || '上传失败')
   }
 })

@@ -1,24 +1,19 @@
 import { defineEventHandler, getCookie } from 'h3';
 import { Event } from '../../models/event.schema';
 import { verifyToken } from '../../utils/jwt';
+import { handleUnauthorized, handleInternalError } from '../../utils/error';
 
 export default defineEventHandler(async (event) => {
   const token = getCookie(event, 'token') || event.node.req.headers.authorization?.split(' ')[1];
 
   if (!token) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: '请先登录'
-    });
+    handleUnauthorized('请先登录');
   }
 
   try {
     const user = await verifyToken(token);
     if (!user || !user._id) {
-      throw createError({
-        statusCode: 401,
-        statusMessage: '用户不存在'
-      });
+      handleUnauthorized('用户不存在');
     }
 
     // Get all events created by the user (draft and published)
@@ -32,9 +27,6 @@ export default defineEventHandler(async (event) => {
     };
   } catch (error: any) {
     console.error('Get my events error:', error);
-    throw createError({
-      statusCode: 500,
-      statusMessage: '获取活动失败'
-    });
+    handleInternalError('获取活动失败');
   }
 });

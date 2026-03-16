@@ -1,24 +1,19 @@
 import { defineEventHandler, getCookie, readBody } from 'h3';
 import { User } from '../../models/user.schema';
 import { verifyToken } from '../../utils/jwt';
+import { handleUnauthorized, handleNotFound, handleInternalError } from '../../utils/error';
 
 export default defineEventHandler(async (event) => {
   const token = getCookie(event, 'token') || event.node.req.headers.authorization?.split(' ')[1];
 
   if (!token) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: '未授权访问'
-    });
+    handleUnauthorized();
   }
 
   try {
     const user = await verifyToken(token);
     if (!user || !user._id) {
-      throw createError({
-        statusCode: 401,
-        statusMessage: '用户不存在'
-      });
+      handleUnauthorized('用户不存在');
     }
 
     const body = await readBody(event);
@@ -40,10 +35,7 @@ export default defineEventHandler(async (event) => {
     );
 
     if (!updatedUser) {
-      throw createError({
-        statusCode: 404,
-        statusMessage: '用户不存在'
-      });
+      handleNotFound('用户不存在');
     }
 
     // Remove password from response
@@ -57,9 +49,6 @@ export default defineEventHandler(async (event) => {
     };
   } catch (error: any) {
     console.error('Update profile error:', error);
-    throw createError({
-      statusCode: 500,
-      statusMessage: error.message || '更新失败'
-    });
+    handleInternalError(error.message || '更新失败');
   }
 });

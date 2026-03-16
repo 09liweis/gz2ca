@@ -1,13 +1,11 @@
 import { Media } from '../../../models/media.schema'
+import { handleBadRequest, handleInternalError } from '../../../utils/error'
 
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')
 
   if (!id) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: '活动ID不能为空'
-    })
+    handleBadRequest('活动ID不能为空')
   }
 
   try {
@@ -19,9 +17,6 @@ export default defineEventHandler(async (event) => {
     }
   } catch (error: any) {
     console.error('Get media error:', error)
-    throw createError({
-      statusCode: 500,
-      statusMessage: '获取媒体列表失败'
-    })
+    handleInternalError('获取媒体列表失败')
   }
 })
