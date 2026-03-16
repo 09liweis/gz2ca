@@ -1,5 +1,4 @@
 import { defineEventHandler, getCookie } from 'h3';
-import { User } from '../../models/user.schema';
 import { verifyToken } from '../../utils/jwt';
 
 export default defineEventHandler(async (event) => {
