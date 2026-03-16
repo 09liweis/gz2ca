@@ -40,9 +40,9 @@
         <!-- Signup Link -->
         <p class="mt-6 text-center text-gray-600">
           还没有账号？
-          <NuxtLink to="/signup" class="text-blue-600 hover:text-blue-700 font-medium">
+          <LinkButton to="/signup" variant="text-primary">
             立即注册
-          </NuxtLink>
+          </LinkButton>
         </p>
       </div>
     </div>
@@ -53,6 +53,7 @@
 import { ref } from 'vue'
 import Input from '~/components/form/Input.vue'
 import Button from '~/components/form/Button.vue'
+import LinkButton from '~/components/form/LinkButton.vue'
 import { post } from '~/utils/http'
 import { initAuth } from '~/composables/useAuth'
 

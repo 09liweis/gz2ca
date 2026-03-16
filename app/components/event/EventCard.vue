@@ -82,7 +82,7 @@
       </div>
 
       <!-- View Details Arrow -->
-      <div v-else class="flex items-center text-blue-600 text-sm font-medium pt-4 border-t group-hover:translate-x-2 transition-transform">
+      <div v-else class="flex items-center text-[#11817b] text-sm font-medium pt-4 border-t group-hover:translate-x-2 transition-transform">
         查看详情
         <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />

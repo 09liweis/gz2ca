@@ -72,9 +72,9 @@
         <!-- Login Link -->
         <p class="mt-6 text-center text-gray-600">
           已有账号？
-          <NuxtLink to="/login" class="text-blue-600 hover:text-blue-700 font-medium">
+          <LinkButton to="/login" variant="text-primary">
             立即登录
-          </NuxtLink>
+          </LinkButton>
         </p>
       </div>
     </div>
@@ -85,6 +85,7 @@
 import { ref } from 'vue'
 import Input from '~/components/form/Input.vue'
 import Button from '~/components/form/Button.vue'
+import LinkButton from '~/components/form/LinkButton.vue'
 import { post } from '~/utils/http'
 
 const form = ref({

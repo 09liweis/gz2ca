@@ -13,43 +13,38 @@
 
         <!-- Desktop Navigation -->
         <div class="hidden md:flex items-center space-x-1">
-          <NuxtLink to="/"
-            class="px-3 py-2 text-gray-700 hover:text-[#11817b] font-medium transition-all duration-200 relative group">
+          <LinkButton to="/" variant="text-primary" class="px-3 py-2">
             首页
             <span
-              class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#11817b] group-hover:w-full transition-all duration-300"></span>
-          </NuxtLink>
-          <NuxtLink to="/about-us"
-            class="px-3 py-2 text-gray-700 hover:text-[#11817b] font-medium transition-all duration-200 relative group">
+              class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
+          </LinkButton>
+          <LinkButton to="/about-us" variant="text-primary" class="px-3 py-2">
             关于我们
             <span
-              class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#11817b] group-hover:w-full transition-all duration-300"></span>
-          </NuxtLink>
-          <NuxtLink to="/events"
-            class="px-3 py-2 text-gray-700 hover:text-[#11817b] font-medium transition-all duration-200 relative group">
+              class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
+          </LinkButton>
+          <LinkButton to="/events" variant="text-primary" class="px-3 py-2">
             活动
             <span
-              class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#11817b] group-hover:w-full transition-all duration-300"></span>
-          </NuxtLink>
+              class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
+          </LinkButton>
         </div>
 
         <!-- Auth Section Desktop -->
         <div class="hidden md:flex items-center gap-4">
           <template v-if="isLoggedIn">
-              <NuxtLink to="/profile"
-                class="px-3 block py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors font-medium">
+              <LinkButton to="/profile" variant="text-primary" class="!px-3 !py-2 !text-gray-700 hover:!bg-gray-100">
                 {{ userName }}
-              </NuxtLink>
+              </LinkButton>
               <div class="w-px h-6 bg-gray-200"></div>
               <Button type="button" @click="handleLogout" variant="danger">
                 登出
               </Button>
           </template>
           <template v-else>
-            <NuxtLink to="/login"
-              class="px-6 py-2.5 bg-[#11817b] text-white rounded-lg hover:shadow-lg hover:shadow-primary/20 transform hover:scale-105 transition-all duration-200 font-medium">
+            <LinkButton to="/login" variant="primary" class="!px-6 !py-2.5">
               登录
-            </NuxtLink>
+            </LinkButton>
           </template>
         </div>
 
@@ -73,35 +68,30 @@
       <!-- Mobile menu -->
       <div v-if="isOpen"
         class="md:hidden pb-4 border-t border-gray-200 pt-4 space-y-3 animate-in fade-in slide-in-from-top-2 duration-200">
-        <NuxtLink @click="isOpen = false" to="/"
-          class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors font-medium">
+        <LinkButton @click.native="isOpen = false" to="/" variant="text-primary" class="!block !px-4 !py-2 !text-gray-700 hover:!bg-primary/10 rounded-lg">
           首页
-        </NuxtLink>
-        <NuxtLink @click="isOpen = false" to="/about-us"
-          class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors font-medium">
+        </LinkButton>
+        <LinkButton @click.native="isOpen = false" to="/about-us" variant="text-primary" class="!block !px-4 !py-2 !text-gray-700 hover:!bg-primary/10 rounded-lg">
           关于我们
-        </NuxtLink>
-        <NuxtLink @click="isOpen = false" to="/events"
-          class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors font-medium">
+        </LinkButton>
+        <LinkButton @click.native="isOpen = false" to="/events" variant="text-primary" class="!block !px-4 !py-2 !text-gray-700 hover:!bg-primary/10 rounded-lg">
           活动
-        </NuxtLink>
+        </LinkButton>
 
         <!-- Mobile Auth Section -->
         <div class="border-t border-gray-200 pt-3">
           <template v-if="isLoggedIn">
-            <NuxtLink @click="isOpen = false" to="/profile"
-              class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors font-medium">
+            <LinkButton @click.native="isOpen = false" to="/profile" variant="text-primary" class="!block !px-4 !py-2 !text-gray-700 hover:!bg-primary/10 rounded-lg">
               {{ userName }}
-            </NuxtLink>
+            </LinkButton>
             <Button type="button" @click="handleLogout" variant="danger">
               登出
             </Button>
           </template>
           <template v-else>
-            <NuxtLink @click="isOpen = false" to="/login"
-              class="block px-4 py-2.5 bg-[#11817b] text-white rounded-lg hover:shadow-lg transition-all font-medium text-center">
+            <LinkButton @click.native="isOpen = false" to="/login" variant="primary" class="!block !px-4 !py-2.5">
               登录
-            </NuxtLink>
+            </LinkButton>
           </template>
         </div>
       </div>
@@ -113,6 +103,7 @@
 import { ref, onMounted } from 'vue'
 import { useUser } from '~/composables/useAuth'
 import Button from '~/components/form/Button.vue'
+import LinkButton from '~/components/form/LinkButton.vue'
 
 const { isLoggedIn, userName, initAuth, logout } = useUser()
 const isOpen = ref(false)

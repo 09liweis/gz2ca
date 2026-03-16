@@ -235,12 +235,12 @@
           无论您身在加拿大哪座城市，无论您毕业于哪一年，我们都欢迎您的加入。让我们一起创造更多美好的回忆！
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <NuxtLink to="/signup" class="px-8 py-4 bg-white text-blue-600 rounded-lg hover:bg-blue-50 transition-colors font-semibold text-lg shadow-lg">
+          <LinkButton to="/signup" class="!px-8 !py-4 !bg-white !text-primary !shadow-lg hover:!bg-gray-50 text-lg">
             立即注册
-          </NuxtLink>
-          <NuxtLink to="/events" class="px-8 py-4 border-2 border-white text-white rounded-lg hover:bg-white hover:text-blue-600 transition-colors font-semibold text-lg">
+          </LinkButton>
+          <LinkButton to="/events" class="!px-8 !py-4 !border-2 !border-white !text-white hover:!bg-white hover:!text-primary text-lg">
             查看活动
-          </NuxtLink>
+          </LinkButton>
         </div>
       </div>
     </section>
@@ -248,6 +248,8 @@
 </template>
 
 <script setup lang="ts">
+import LinkButton from '~/components/form/LinkButton.vue'
+
 useHead({
   title: '关于我们 - 广州二中加拿大生活',
   meta: [
