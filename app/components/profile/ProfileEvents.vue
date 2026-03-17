@@ -20,6 +20,7 @@
       empty-message="您还没有创建任何活动"
       :columns="2"
       :show-actions="true"
+      :show-status="true"
       @edit="$emit('edit', $event)"
       @delete="$emit('delete', $event)"
     />

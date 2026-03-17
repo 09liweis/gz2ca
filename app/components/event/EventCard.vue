@@ -19,6 +19,7 @@
           <span class="text-sm">{{ formatShortDate(event.date) }}</span>
         </div>
         <span
+          v-if="showStatus"
           :class="[
             'px-3 py-1 rounded-full text-xs font-medium',
             event.status === 'published' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
@@ -98,12 +99,14 @@ import { useRouter } from 'vue-router'
 interface Props {
   event: any
   showActions?: boolean
+  showStatus?: boolean
 }
 
 const router = useRouter()
 
 const props = withDefaults(defineProps<Props>(), {
-  showActions: false
+  showActions: false,
+  showStatus: false
 })
 
 defineEmits<{

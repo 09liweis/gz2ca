@@ -23,6 +23,7 @@
         :key="event._id"
         :event="event"
         :show-actions="showActions"
+        :show-status="showStatus"
         @edit="$emit('edit', event)"
         @delete="$emit('delete', event)"
       />
@@ -51,6 +52,7 @@ interface Props {
   emptyMessage?: string
   columns?: 1 | 2 | 3
   showActions?: boolean
+  showStatus?: boolean
 }
 
 withDefaults(defineProps<Props>(), {
@@ -58,7 +60,8 @@ withDefaults(defineProps<Props>(), {
   errorMessage: '',
   emptyMessage: '还没有创建任何活动',
   columns: 3,
-  showActions: false
+  showActions: false,
+  showStatus: false
 })
 
 defineEmits<{
