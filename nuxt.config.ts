@@ -3,6 +3,11 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   modules: ['@nuxtjs/tailwindcss', 'nuxt-mongoose'],
+  runtimeConfig: {
+    public: {
+      mapboxAccessToken: process.env.MAPBOX_ACCESS_TOKEN || ''
+    }
+  },
   tailwindcss: {
     exposeConfig: true,
     viewer: true,

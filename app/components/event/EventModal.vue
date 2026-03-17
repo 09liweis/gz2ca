@@ -29,12 +29,36 @@
           type="date"
           required
         />
-        <Input
-          id="address"
-          v-model="form.address"
-          label="活动地址"
-          placeholder="请输入活动地址"
-        />
+        <div class="relative">
+          <label
+            for="address"
+            class="block text-sm font-medium text-gray-700 mb-2"
+          >
+            活动地址
+          </label>
+          <input
+            id="address"
+            v-model="form.address"
+            type="text"
+            placeholder="请输入活动地址"
+            @input="handleAddressInput"
+            @focus="showSuggestions = true"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+          />
+          <ul
+            v-if="showSuggestions && addressSuggestions.length > 0"
+            class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto"
+          >
+            <li
+              v-for="(suggestion, index) in addressSuggestions"
+              :key="index"
+              @click="selectAddress(suggestion)"
+              class="px-4 py-3 hover:bg-gray-100 cursor-pointer border-b border-gray-100 last:border-b-0"
+            >
+              {{ suggestion.name }} {{ suggestion.full_address }}
+            </li>
+          </ul>
+        </div>
         <Input
           id="city"
           v-model="form.city"
@@ -82,7 +106,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, onUnmounted } from 'vue'
 import Input from '~/components/form/Input.vue'
 import Button from '~/components/form/Button.vue'
 import Textarea from '~/components/form/Textarea.vue'
@@ -123,6 +147,16 @@ const form = ref({
 const loading = ref(false)
 const errorMessage = ref('')
 const successMessage = ref('')
+const addressSuggestions = ref<any[]>([])
+const showSuggestions = ref(false)
+let debounceTimer: ReturnType<typeof setTimeout> | null = null
+const mapboxToken = useRuntimeConfig().public.mapboxAccessToken || ''
+
+const generateSessionToken = (): string => {
+  return Date.now().toString(36) + Math.random().toString(36).substring(2)
+}
+
+const sessionToken = ref(generateSessionToken())
 
 const handleSubmit = async () => {
   loading.value = true
@@ -144,6 +178,45 @@ const handleSubmit = async () => {
 const handleCancel = () => {
   resetForm()
   emit('close')
+}
+
+const handleAddressInput = (event: Event) => {
+  const query = (event.target as HTMLInputElement).value
+
+  if (debounceTimer) {
+    clearTimeout(debounceTimer)
+  }
+
+  if (query.length < 2) {
+    addressSuggestions.value = []
+    return
+  }
+
+  debounceTimer = setTimeout(async () => {
+    try {
+      const response = await fetch(
+        `https://api.mapbox.com/search/searchbox/v1/suggest?q=${encodeURIComponent(query)}&access_token=${mapboxToken}&session_token=${sessionToken.value}`
+      )
+      const data = await response.json()
+      addressSuggestions.value = data.suggestions || []
+    } catch (error) {
+      console.error('Address search error:', error)
+      addressSuggestions.value = []
+    }
+  }, 300)
+}
+
+const selectAddress = (suggestion: any) => {
+  form.value.address = suggestion.full_address
+  
+  if (suggestion.context) {
+    form.value.city = suggestion.context?.place?.name;
+  }
+  
+  showSuggestions.value = false
+  addressSuggestions.value = []
+  
+  sessionToken.value = generateSessionToken()
 }
 
 const resetForm = () => {
@@ -186,6 +259,19 @@ watch(() => props.isOpen, (newVal) => {
     initForm()
   } else {
     resetForm()
+  }
+})
+
+watch(() => form.value.address, (newVal) => {
+  if (!newVal || newVal.length < 2) {
+    addressSuggestions.value = []
+    showSuggestions.value = false
+  }
+})
+
+onUnmounted(() => {
+  if (debounceTimer) {
+    clearTimeout(debounceTimer)
   }
 })
 </script>
