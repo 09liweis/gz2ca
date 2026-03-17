@@ -13,15 +13,17 @@ export default defineEventHandler(async (event) => {
     const eventDoc = await Event.findById(id).populate('place_id')
 
     if (!eventDoc) {
-      handleNotFound('活动不存在')
+      return handleNotFound('活动不存在')
     }
 
     const organizer = await User.findById(eventDoc.user_id).select('fn ln email')
+    const mediaList = await Media.find({ event_id: id }).sort({ ts: -1 })
 
     return {
       success: true,
       event: eventDoc,
-      organizer
+      organizer,
+      medias: mediaList
     }
   } catch (error: any) {
     if (error.statusCode) {

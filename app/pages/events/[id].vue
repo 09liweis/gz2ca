@@ -151,6 +151,7 @@ const loadEvent = async () => {
     if (response.success) {
       event.value = response.event
       organizer.value = response.organizer
+      media.value = response.medias
     } else {
       errorMessage.value = response.message || '加载活动失败'
     }
@@ -235,7 +236,6 @@ const handleDeleteImage = async (item: any) => {
 
 onMounted(() => {
   loadEvent()
-  loadMedia()
 })
 
 const eventTitle = computed(() => event.value?.tl || '活动详情')
