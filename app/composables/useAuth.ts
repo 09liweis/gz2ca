@@ -44,9 +44,6 @@ export const initAuth = async () => {
       user.value = response.user as User
     }
   } catch (error) {
-    // Token might be invalid, clear it
-    localStorage.removeItem('token')
-    localStorage.removeItem('userId')
     user.value = null
   } finally {
     loading.value = false
