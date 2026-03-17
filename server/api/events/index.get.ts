@@ -4,8 +4,8 @@ import { handleInternalError } from '../../utils/error';
 
 export default defineEventHandler(async (event) => {
   try {
-    // Get all published events
     const events = await Event.find({ status: 'published' })
+      .populate('place_id')
       .sort({ date: 1 })
       .lean();
 

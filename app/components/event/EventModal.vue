@@ -36,12 +36,6 @@
           placeholder="请输入活动地址"
           @address-selected="handleAddressSelected"
         />
-        <Input
-          id="city"
-          v-model="form.city"
-          label="城市"
-          placeholder="请输入城市"
-        />
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">状态</label>
           <select
@@ -118,13 +112,13 @@ const form = ref({
   desc: '',
   date: '',
   address: '',
-  city: '',
   status: 'draft'
 })
 
 const loading = ref(false)
 const errorMessage = ref('')
 const successMessage = ref('')
+const selectedPlace = ref<any>(null)
 
 const handleSubmit = async () => {
   loading.value = true
@@ -133,8 +127,11 @@ const handleSubmit = async () => {
 
   try {
     emit('submit', props.eventData?._id || null, {
-      ...form.value,
-      date: new Date(form.value.date)
+      tl: form.value.tl,
+      desc: form.value.desc,
+      date: new Date(form.value.date),
+      place: selectedPlace.value,
+      status: form.value.status
     })
   } catch (error: any) {
     errorMessage.value = error.data?.message || (isEdit.value ? '更新活动失败' : '创建活动失败')
@@ -149,9 +146,7 @@ const handleCancel = () => {
 }
 
 const handleAddressSelected = (suggestion: any) => {
-  if (suggestion.context?.place?.name) {
-    form.value.city = suggestion.context.place.name
-  }
+  selectedPlace.value = suggestion
 }
 
 const resetForm = () => {
@@ -161,9 +156,9 @@ const resetForm = () => {
       desc: '',
       date: '',
       address: '',
-      city: '',
       status: 'draft'
     }
+    selectedPlace.value = null
   }
   errorMessage.value = ''
   successMessage.value = ''
@@ -174,18 +169,27 @@ const initForm = () => {
     form.value.tl = props.eventData.tl || ''
     form.value.desc = props.eventData.desc || ''
     form.value.date = props.eventData.date ? new Date(props.eventData.date).toISOString().split('T')[0] : ''
-    form.value.address = props.eventData.address || ''
-    form.value.city = props.eventData.city || ''
+    form.value.address = props.eventData.place_id?.full_address || ''
     form.value.status = props.eventData.status || 'draft'
+    
+    if (props.eventData.place_id) {
+      selectedPlace.value = {
+        mapbox_id: props.eventData.place_id.mapbox_id,
+        name: props.eventData.place_id.name,
+        full_address: props.eventData.place_id.full_address,
+        context: props.eventData.place_id.context,
+        coordinates: props.eventData.place_id.coordinates
+      }
+    }
   } else {
     form.value = {
       tl: '',
       desc: '',
       date: '',
       address: '',
-      city: '',
       status: 'draft'
     }
+    selectedPlace.value = null
   }
 }
 

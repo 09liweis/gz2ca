@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const eventDoc = await Event.findById(id)
+    const eventDoc = await Event.findById(id).populate('place_id')
 
     if (!eventDoc) {
       handleNotFound('活动不存在')

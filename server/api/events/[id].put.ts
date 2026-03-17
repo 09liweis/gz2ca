@@ -1,5 +1,6 @@
 import { defineEventHandler, getCookie, readBody, getRouterParam } from 'h3';
 import { Event } from '../../models/event.schema';
+import { Place } from '../../models/place.schema';
 import { verifyToken } from '../../utils/jwt';
 import { handleUnauthorized, handleBadRequest, handleNotFound, handleForbidden, handleInternalError } from '../../utils/error';
 
@@ -7,7 +8,7 @@ export default defineEventHandler(async (event) => {
   const token = getCookie(event, 'token') || event.node.req.headers.authorization?.split(' ')[1];
 
   if (!token) {
-    handleUnauthorized('请先登录');
+    return handleUnauthorized('请先登录');
   }
 
   try {
@@ -26,33 +27,63 @@ export default defineEventHandler(async (event) => {
       handleNotFound('活动不存在');
     }
 
-    // Check if user is the organizer
     if (existingEvent.user_id !== user._id.toString()) {
       handleForbidden('无权修改此活动');
     }
 
     const body = await readBody(event);
-    const { tl, desc, date, address, city, status } = body;
+    const { tl, desc, date, place, status } = body;
 
-    // Update event
+    let place_id = existingEvent.place_id;
+
+    if (place) {
+      const existingPlace = await Place.findOne({ mapbox_id: place.mapbox_id });
+
+      if (existingPlace) {
+        place_id = existingPlace._id.toString();
+      } else {
+        const newPlace = await Place.create({
+          name: place.name,
+          full_address: place.full_address,
+          city: place.context?.place?.name,
+          region: place.context?.region?.name,
+          country: place.context?.country?.name,
+          mapbox_id: place.mapbox_id,
+          latitude: place.coordinates?.latitude,
+          longitude: place.coordinates?.longitude,
+          coordinates: place.coordinates?.latitude && place.coordinates?.longitude
+            ? {
+                type: 'Point',
+                coordinates: [place.coordinates.longitude, place.coordinates.latitude]
+              }
+            : undefined,
+          context: place.context,
+          ts: new Date(),
+          mt: new Date()
+        });
+        place_id = newPlace._id.toString();
+      }
+    }
+
     const updatedEvent = await Event.findByIdAndUpdate(
       eventId,
       {
         tl,
         desc,
         date,
-        address,
-        city,
+        place_id,
         status,
         mt: new Date()
       },
       { new: true, runValidators: true }
     );
 
+    const populatedEvent = await Event.findById(updatedEvent._id).populate('place_id');
+
     return {
       success: true,
       message: '活动更新成功',
-      event: updatedEvent
+      event: populatedEvent
     };
   } catch (error: any) {
     console.error('Update event error:', error);

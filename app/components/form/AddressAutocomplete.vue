@@ -37,6 +37,7 @@
 import { ref, onUnmounted, watch } from 'vue'
 
 interface AddressSuggestion {
+  mapbox_id?: string
   name?: string
   full_address?: string
   context?: {
@@ -109,13 +110,42 @@ const handleInput = () => {
   }, 300)
 }
 
-const selectAddress = (suggestion: AddressSuggestion) => {
+const selectAddress = async (suggestion: AddressSuggestion) => {
   searchQuery.value = suggestion.full_address || ''
   emit('update:modelValue', searchQuery.value)
-  emit('address-selected', suggestion)
   
   showSuggestions.value = false
   suggestions.value = []
+  
+  try {
+    const response = await fetch(
+      `https://api.mapbox.com/search/searchbox/v1/retrieve/${suggestion.mapbox_id}?access_token=${mapboxToken}&session_token=${sessionToken.value}`
+    )
+    const data = await response.json()
+    
+    if (data.features && data.features.length > 0) {
+      const feature = data.features[0]
+      const [longitude, latitude] = feature.geometry.coordinates
+      
+      const placeData = {
+        mapbox_id: suggestion.mapbox_id,
+        name: suggestion.name,
+        full_address: suggestion.full_address,
+        context: suggestion.context,
+        coordinates: {
+          latitude,
+          longitude
+        }
+      }
+      
+      emit('address-selected', placeData)
+    } else {
+      emit('address-selected', suggestion)
+    }
+  } catch (error) {
+    console.error('Retrieve address error:', error)
+    emit('address-selected', suggestion)
+  }
   
   sessionToken.value = generateSessionToken()
 }

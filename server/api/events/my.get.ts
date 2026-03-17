@@ -7,17 +7,17 @@ export default defineEventHandler(async (event) => {
   const token = getCookie(event, 'token') || event.node.req.headers.authorization?.split(' ')[1];
 
   if (!token) {
-    handleUnauthorized('请先登录');
+    return handleUnauthorized('请先登录');
   }
 
   try {
     const user = await verifyToken(token);
     if (!user || !user._id) {
-      handleUnauthorized('用户不存在');
+      return handleUnauthorized('用户不存在');
     }
 
-    // Get all events created by the user (draft and published)
     const events = await Event.find({ user_id: user._id.toString() })
+      .populate('place_id')
       .sort({ date: 1 })
       .lean();
 

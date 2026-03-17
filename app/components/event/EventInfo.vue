@@ -10,24 +10,24 @@
       </div>
     </div>
 
-    <div v-if="event.address" class="flex items-center">
+    <div v-if="event.place_id?.full_address" class="flex items-center">
       <svg class="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
       </svg>
       <div>
         <p class="text-sm text-gray-500">活动地址</p>
-        <p class="text-gray-900 font-medium">{{ event.address }}</p>
+        <p class="text-gray-900 font-medium">{{ event.place_id.full_address }}</p>
       </div>
     </div>
 
-    <div v-if="event.city" class="flex items-center">
+    <div v-if="event.place_id?.city" class="flex items-center">
       <svg class="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
       </svg>
       <div>
         <p class="text-sm text-gray-500">城市</p>
-        <p class="text-gray-900 font-medium">{{ event.city }}</p>
+        <p class="text-gray-900 font-medium">{{ event.place_id.city }}</p>
       </div>
     </div>
 

@@ -18,12 +18,10 @@ export const Event = defineMongooseModel('Event', {
     type: Date,
     required: true
   },
-  address: {
+  place_id: {
     type: String,
-    trim: true
-  },
-  city: {
-    type: String,
+    ref: 'Place',
+    index: true
   },
   status: {
     type: String,//draft, published
