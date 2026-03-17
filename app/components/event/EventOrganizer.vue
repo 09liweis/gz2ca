@@ -4,7 +4,6 @@
       {{ initial }}
     </div>
     <div class="ml-4">
-      <p class="text-sm text-gray-500">组织者</p>
       <p class="text-gray-900 font-medium">{{ organizerName }}</p>
     </div>
   </div>
@@ -33,7 +32,7 @@ const organizerName = computed(() => {
   const fn = props.organizer?.fn || ''
   const ln = props.organizer?.ln || ''
   if (fn || ln) {
-    return `${ln}${fn}`
+    return `${fn} ${ln}`
   }
   return props.organizer?.email || '未知组织者'
 })

@@ -3,7 +3,7 @@
     :type="type"
     :disabled="disabled || loading"
     :class="[
-      'py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed',
+      'p-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed',
       fullWidth ? 'w-full' : '',
       customClass,
       variantClasses

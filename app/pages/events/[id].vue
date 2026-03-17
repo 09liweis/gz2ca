@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-[#11817b] py-12">
+  <div class="min-h-screen py-12">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Loading State -->
       <EventDetailLoading v-if="loading" />
