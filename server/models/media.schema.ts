@@ -16,10 +16,8 @@ export const Media = defineMongooseModel('Media', {
   },
   ts: {
     type: Date,
-    default: Date.now
   },
   mt: {
     type: Date,
-    default: Date.now
   }
 })
