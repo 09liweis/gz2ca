@@ -10,20 +10,20 @@ export default defineEventHandler(async (event) => {
 
   // Basic validation
   if (!email || !password) {
-    handleBadRequest('邮箱和密码为必填项');
+    return handleBadRequest('邮箱和密码为必填项');
   }
 
   try {
     // Find user by email
     const user = await User.findOne({ eml: email });
     if (!user) {
-      handleUnauthorized('邮箱或密码错误');
+      return handleUnauthorized('邮箱或密码错误');
     }
 
     // Verify password
     const isPasswordValid = await comparePassword(password, user.pwd);
     if (!isPasswordValid) {
-      handleUnauthorized('邮箱或密码错误');
+      return handleUnauthorized('邮箱或密码错误');
     }
 
     // Update last login time
@@ -56,6 +56,6 @@ export default defineEventHandler(async (event) => {
     if (error.statusCode) {
       throw error;
     }
-    handleInternalError('登录失败，请稍后重试');
+    return handleInternalError('登录失败，请稍后重试');
   }
 });
