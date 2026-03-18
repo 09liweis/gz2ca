@@ -91,6 +91,7 @@ import Button from '~/components/form/Button.vue'
 import LinkButton from '~/components/form/LinkButton.vue'
 import { post } from '~/utils/http'
 import { initAuth } from '~/composables/useAuth'
+import { SITE_NAME } from '~/constants'
 
 const form = ref({
   email: '',
@@ -189,9 +190,9 @@ const handleGoogleLogin = async () => {
 }
 
 useHead({
-  title: '登录 - 广州人在加拿大',
+  title: `登录 - ${SITE_NAME}`,
   meta: [
-    { name: 'description', content: '登录广州人在加拿大社区账号。' },
+    { name: 'description', content: `登录${SITE_NAME}社区账号。` },
     { name: 'robots', content: 'noindex, nofollow' }
   ]
 })

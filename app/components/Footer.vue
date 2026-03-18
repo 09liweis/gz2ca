@@ -3,7 +3,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div class="border-t border-gray-800 pt-6">
         <p class="text-sm text-gray-400 text-center">
-          &copy; {{ currentYear }} 广州人在加拿大
+          &copy; {{ currentYear }} {{ SITE_NAME }}
         </p>
       </div>
     </div>
@@ -11,5 +11,7 @@
 </template>
 
 <script setup lang="ts">
+import { SITE_NAME } from '~/constants'
+
 const currentYear = new Date().getFullYear()
 </script>

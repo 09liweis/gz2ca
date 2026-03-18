@@ -8,7 +8,7 @@
             class="w-10 h-10 bg-[#11817b] rounded-lg flex items-center justify-center transform group-hover:scale-105 transition-transform">
             <span class="text-white font-bold text-lg">广</span>
           </div>
-          <span class="font-semibold text-gray-900 hidden sm:inline">广州人在加拿大</span>
+          <span class="font-semibold text-gray-900 hidden sm:inline">{{ SITE_NAME }}</span>
         </NuxtLink>
 
         <!-- Desktop Navigation -->
@@ -113,6 +113,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useUser } from '~/composables/useAuth'
+import { SITE_NAME } from '~/constants'
 import Button from '~/components/form/Button.vue'
 import LinkButton from '~/components/form/LinkButton.vue'
 

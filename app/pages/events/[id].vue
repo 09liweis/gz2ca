@@ -77,6 +77,7 @@ import EventDetailGallery from '~/components/event/EventDetailGallery.vue'
 import EventDetailBackButton from '~/components/event/EventDetailBackButton.vue'
 import { get, post, del, put } from '~/utils/http'
 import { useUser } from '~/composables/useAuth'
+import { SITE_NAME } from '~/constants'
 
 const route = useRoute()
 const { user: currentUser } = useUser()
@@ -192,10 +193,10 @@ onMounted(() => {
 const eventTitle = computed(() => event.value?.tl || '活动详情')
 
 useHead({
-  title: computed(() => `${eventTitle.value} - 广州人在加拿大`),
+  title: computed(() => `${eventTitle.value} - ${SITE_NAME}`),
   meta: computed(() => [
     { name: 'description', content: event.value?.desc || '查看此活动的详细信息' },
-    { name: 'keywords', content: `广州人在加拿大, 活动, ${event.value?.tl || ''}` },
+    { name: 'keywords', content: `${SITE_NAME}, 活动, ${event.value?.tl || ''}` },
     { property: 'og:title', content: eventTitle.value },
     { property: 'og:description', content: event.value?.desc || '查看此活动的详细信息' },
     { property: 'og:type', content: 'website' }

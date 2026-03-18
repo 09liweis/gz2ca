@@ -72,6 +72,7 @@ import EventList from '~/components/event/EventList.vue'
 import EventModal from '~/components/event/EventModal.vue'
 import { get, post } from '~/utils/http'
 import { useUser } from '~/composables/useAuth'
+import { SITE_NAME } from '~/constants'
 
 const router = useRouter()
 const { isLoggedIn } = useUser()
@@ -129,12 +130,12 @@ onMounted(() => {
 })
 
 useHead({
-  title: '活动 - 广州人在加拿大',
+  title: `活动 - ${SITE_NAME}`,
   meta: [
-    { name: 'description', content: '查看广州人在加拿大的所有活动。' },
-    { name: 'keywords', content: '广州人在加拿大, 加拿大, 活动, 聚会' },
-    { property: 'og:title', content: '活动 - 广州人在加拿大' },
-    { property: 'og:description', content: '查看广州人在加拿大的所有活动' },
+    { name: 'description', content: `查看${SITE_NAME}的所有活动。` },
+    { name: 'keywords', content: `${SITE_NAME}, 加拿大, 活动, 聚会` },
+    { property: 'og:title', content: `活动 - ${SITE_NAME}` },
+    { property: 'og:description', content: `查看${SITE_NAME}的所有活动` },
     { property: 'og:type', content: 'website' }
   ]
 })

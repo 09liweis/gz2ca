@@ -69,6 +69,7 @@ import ProfileEvents from '~/components/profile/ProfileEvents.vue'
 import EventModal from '~/components/event/EventModal.vue'
 import { get, put, del } from '~/utils/http'
 import { useUser } from '~/composables/useAuth'
+import { SITE_NAME } from '~/constants'
 
 const { user: globalUser, loading: authLoading, updateUser } = useUser()
 
@@ -230,7 +231,7 @@ const handleDeleteEvent = async (event: any) => {
 }
 
 useHead({
-  title: '个人资料 - 广州人在加拿大',
+  title: `个人资料 - ${SITE_NAME}`,
   meta: [
     { name: 'description', content: '查看和管理您的个人资料。' },
     { name: 'robots', content: 'noindex, nofollow' }

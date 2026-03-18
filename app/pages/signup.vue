@@ -87,6 +87,7 @@ import Input from '~/components/form/Input.vue'
 import Button from '~/components/form/Button.vue'
 import LinkButton from '~/components/form/LinkButton.vue'
 import { post } from '~/utils/http'
+import { SITE_NAME } from '~/constants'
 
 const form = ref({
   fn:'',
@@ -133,9 +134,9 @@ const handleSignup = async () => {
 }
 
 useHead({
-  title: '注册 - 广州人在加拿大',
+  title: `注册 - ${SITE_NAME}`,
   meta: [
-    { name: 'description', content: '注册广州人在加拿大社区账号。' },
+    { name: 'description', content: `注册${SITE_NAME}社区账号。` },
     { name: 'robots', content: 'noindex, nofollow' }
   ]
 })
