@@ -43,7 +43,7 @@
           :events="myEvents"
           :loading="eventsLoading"
           :error-message="eventsErrorMessage"
-          @create-event="$router.push('/events')"
+          @create-event="$router.push('/')"
           @edit="handleEditEvent"
           @delete="handleDeleteEvent"
         />

@@ -2,7 +2,7 @@
   <Button
     type="button"
     variant="secondary"
-    @click="$router.push('/events')"
+    @click="$router.push('/')"
     class="flex items-center text-gray-600 hover:text-gray-900 mb-6 !px-0 !py-0 !bg-transparent !border-0 !rounded-none"
     :full-width="false"
   >
