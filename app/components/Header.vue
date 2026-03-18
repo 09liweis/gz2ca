@@ -4,10 +4,6 @@
       <div class="flex justify-between items-center h-16">
         <!-- Logo -->
         <NuxtLink to="/" class="flex items-center space-x-3 group">
-          <div
-            class="w-10 h-10 bg-[#11817b] rounded-lg flex items-center justify-center transform group-hover:scale-105 transition-transform">
-            <span class="text-white font-bold text-lg">广</span>
-          </div>
           <span class="font-semibold text-gray-900 hidden sm:inline">{{ SITE_NAME }}</span>
         </NuxtLink>
 
