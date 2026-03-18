@@ -118,7 +118,7 @@ import Button from '~/components/form/Button.vue'
 import LinkButton from '~/components/form/LinkButton.vue'
 
 const route = useRoute()
-const { isLoggedIn, userName, initAuth, logout } = useUser()
+const { isLoggedIn, userName, logout } = useUser()
 const isOpen = ref(false)
 
 const navigationMenus = computed(() => [
@@ -137,8 +137,4 @@ const handleLogout = () => {
 const handleMobileMenuClick = () => {
   isOpen.value = false
 }
-
-onMounted(() => {
-  initAuth()
-})
 </script>
