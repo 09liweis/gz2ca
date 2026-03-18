@@ -3,25 +3,26 @@ import { defineMongooseModel } from '#nuxt/mongoose';
 export const User = defineMongooseModel('User', {
   fn: {
     type: String,
-    required: true,
     trim: true
   },
   ln:{
     type:String,
-    required: true,
     trim:true
   },
   eml: {
     type: String,
-    required: true,
     unique: true,
     lowercase: true,
     trim: true
   },
   pwd: {
     type: String,
-    required: true,
     minlength: 6
+  },
+  googleId: {
+    type: String,
+    unique: true,
+    sparse: true
   },
   role: {
     type: String,

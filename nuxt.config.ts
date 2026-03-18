@@ -4,8 +4,10 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@nuxtjs/tailwindcss', 'nuxt-mongoose'],
   runtimeConfig: {
+    googleClientId: process.env.GOOGLE_CLIENT_ID,
     public: {
-      mapboxAccessToken: process.env.MAPBOX_ACCESS_TOKEN || ''
+      mapboxAccessToken: process.env.MAPBOX_ACCESS_TOKEN || '',
+      googleClientId: process.env.GOOGLE_CLIENT_ID || ''
     }
   },
   tailwindcss: {
