@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
       return handleNotFound('活动不存在')
     }
 
-    const organizer = await User.findById(eventDoc.user_id).select('fn ln email')
+    const organizer = await User.findById(eventDoc.user_id).select('fn ln email avt')
     const mediaList = await Media.find({ event_id: id }).sort({ ts: -1 })
 
     return {
