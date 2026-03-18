@@ -4,7 +4,7 @@
     <div class="bg-[#11817b] text-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div class="text-center">
-          <h1 class="text-4xl md:text-5xl font-bold mb-4">活动</h1>
+          <h1 class="text-4xl md:text-5xl font-bold mb-4">{{SITE_NAME}}</h1>
           <p class="text-xl text-blue-50 max-w-2xl mx-auto mb-8">
             探索精彩活动，共同创造美好回忆
           </p>
