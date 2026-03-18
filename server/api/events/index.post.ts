@@ -1,7 +1,7 @@
 import { defineEventHandler, getCookie, readBody } from 'h3';
 import { Event } from '../../models/event.schema';
-import { Place } from '../../models/place.schema';
 import { verifyToken } from '../../utils/jwt';
+import { upsertPlace } from '../../utils/place';
 import { handleUnauthorized, handleInternalError } from '../../utils/error';
 
 export default defineEventHandler(async (event) => {
@@ -20,36 +20,7 @@ export default defineEventHandler(async (event) => {
     const body = await readBody(event);
     const { tl, desc, date, place, status } = body;
 
-    let place_id = null;
-
-    if (place) {
-      const existingPlace = await Place.findOne({ mapbox_id: place.mapbox_id });
-
-      if (existingPlace) {
-        place_id = existingPlace._id.toString();
-      } else {
-        const newPlace = await Place.create({
-          name: place.name,
-          full_address: place.full_address,
-          city: place.context?.place?.name,
-          region: place.context?.region?.name,
-          country: place.context?.country?.name,
-          mapbox_id: place.mapbox_id,
-          latitude: place.coordinates?.latitude,
-          longitude: place.coordinates?.longitude,
-          coordinates: place.coordinates?.latitude && place.coordinates?.longitude
-            ? {
-                type: 'Point',
-                coordinates: [place.coordinates.longitude, place.coordinates.latitude]
-              }
-            : undefined,
-          context: place.context,
-          ts: new Date(),
-          mt: new Date()
-        });
-        place_id = newPlace._id.toString();
-      }
-    }
+    const place_id = await upsertPlace(place);
 
     const newEvent = await Event.create({
       tl,
