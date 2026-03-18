@@ -29,7 +29,6 @@ export const userName = computed(() => {
 
 // Initialize auth state
 export const initAuth = async () => {
-  if (initialized.value) return
 
   const token = localStorage.getItem('token')
   if (!token) {
