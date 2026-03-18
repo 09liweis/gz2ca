@@ -8,7 +8,12 @@
       </div>
       <div class="flex-1 min-w-0">
         <p class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">{{ item.label }}</p>
-        <p class="text-gray-900 font-semibold truncate">{{ item.value }}</p>
+        <p v-if="item.key === 'name' && event.place_id?.name" class="text-gray-900 font-semibold truncate cursor-pointer hover:text-blue-600 underline">
+          <a :href="`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.place_id.name)}`" target="_blank" rel="noopener noreferrer">
+            {{ item.value }}
+          </a>
+        </p>
+        <p v-else class="text-gray-900 font-semibold truncate">{{ item.value }}</p>
       </div>
     </div>
   </div>
