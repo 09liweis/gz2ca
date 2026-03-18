@@ -133,9 +133,9 @@ const handleSignup = async () => {
 }
 
 useHead({
-  title: '注册 - 广州二中加拿大生活',
+  title: '注册 - 广州人在加拿大',
   meta: [
-    { name: 'description', content: '注册广州二中加拿大生活社区账号，加入校友大家庭。' },
+    { name: 'description', content: '注册广州人在加拿大社区账号。' },
     { name: 'robots', content: 'noindex, nofollow' }
   ]
 })

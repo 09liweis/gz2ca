@@ -31,7 +31,7 @@ export default defineNuxtConfig({
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { name: 'charset', content: 'UTF-8' },
         { name: 'format-detection', content: 'telephone=no' },
-        { name: 'theme-color', content: '#2563eb' }
+        { name: 'theme-color', content: '#11817b' }
       ],
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }

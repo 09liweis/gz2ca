@@ -192,10 +192,10 @@ onMounted(() => {
 const eventTitle = computed(() => event.value?.tl || '活动详情')
 
 useHead({
-  title: computed(() => `${eventTitle.value} - 广州二中加拿大生活`),
+  title: computed(() => `${eventTitle.value} - 广州人在加拿大`),
   meta: computed(() => [
     { name: 'description', content: event.value?.desc || '查看此活动的详细信息' },
-    { name: 'keywords', content: `广州二中, 加拿大, 活动, ${event.value?.tl || ''}` },
+    { name: 'keywords', content: `广州人在加拿大, 活动, ${event.value?.tl || ''}` },
     { property: 'og:title', content: eventTitle.value },
     { property: 'og:description', content: event.value?.desc || '查看此活动的详细信息' },
     { property: 'og:type', content: 'website' }

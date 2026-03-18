@@ -6,9 +6,9 @@
         <NuxtLink to="/" class="flex items-center space-x-3 group">
           <div
             class="w-10 h-10 bg-[#11817b] rounded-lg flex items-center justify-center transform group-hover:scale-105 transition-transform">
-            <span class="text-white font-bold text-lg">G</span>
+            <span class="text-white font-bold text-lg">广</span>
           </div>
-          <span class="font-semibold text-gray-900 hidden sm:inline">广州二中加拿大</span>
+          <span class="font-semibold text-gray-900 hidden sm:inline">广州人在加拿大</span>
         </NuxtLink>
 
         <!-- Desktop Navigation -->
@@ -121,9 +121,7 @@ const { isLoggedIn, userName, initAuth, logout } = useUser()
 const isOpen = ref(false)
 
 const navigationMenus = computed(() => [
-  { label: '首页', to: '/' },
-  { label: '关于我们', to: '/about-us' },
-  { label: '活动', to: '/events' }
+  { label: '活动', to: '/' }
 ])
 
 const isActiveRoute = (path: string) => {

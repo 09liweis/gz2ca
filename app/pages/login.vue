@@ -189,9 +189,9 @@ const handleGoogleLogin = async () => {
 }
 
 useHead({
-  title: '登录 - 广州二中加拿大生活',
+  title: '登录 - 广州人在加拿大',
   meta: [
-    { name: 'description', content: '登录广州二中加拿大生活社区账号，参与校友活动，建立联系。' },
+    { name: 'description', content: '登录广州人在加拿大社区账号。' },
     { name: 'robots', content: 'noindex, nofollow' }
   ]
 })

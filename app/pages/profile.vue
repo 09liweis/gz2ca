@@ -230,9 +230,9 @@ const handleDeleteEvent = async (event: any) => {
 }
 
 useHead({
-  title: '个人资料 - 广州二中加拿大生活',
+  title: '个人资料 - 广州人在加拿大',
   meta: [
-    { name: 'description', content: '查看和管理您的个人资料，更新您在加拿大的信息。' },
+    { name: 'description', content: '查看和管理您的个人资料。' },
     { name: 'robots', content: 'noindex, nofollow' }
   ]
 })

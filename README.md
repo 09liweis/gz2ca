@@ -1,6 +1,6 @@
-# Nuxt Minimal Starter
+# 广州人在加拿大
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+广州人在加拿大活动平台
 
 ## Setup
 
@@ -72,4 +72,11 @@ yarn preview
 bun run preview
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+## Features
+
+- 用户注册和登录
+- 活动创建和管理
+- Mapbox 地址自动完成
+- 活动搜索和筛选
+- 个人资料管理
+
