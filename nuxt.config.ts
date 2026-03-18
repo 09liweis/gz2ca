@@ -17,7 +17,7 @@ export default defineNuxtConfig({
   mongoose: {
     uri: process.env.MONGODB_URI,
     options: {
-      bufferCommands: true
+      bufferCommands: false
     },
     modelsDir: 'models',
     devtools: true,
