@@ -75,7 +75,7 @@
           :to="menu.to"
           variant="text-primary"
           :class="[
-            '!block !px-4 !py-2 rounded-lg',
+            '!block !px-4 !py-2 rounded',
             isActiveRoute(menu.to)
               ? '!text-[#11817b] !bg-[#11817b]/10 font-semibold'
               : '!text-gray-700 hover:!bg-[#11817b]/10'
