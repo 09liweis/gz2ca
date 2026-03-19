@@ -1,19 +1,20 @@
-import { defineEventHandler, getCookie, readBody } from 'h3';
+import { defineEventHandler, readBody } from 'h3';
 import { User } from '../../models/user.schema';
 import { verifyToken } from '../../utils/jwt';
+import { extractToken } from '../../utils/auth';
 import { handleUnauthorized, handleNotFound, handleInternalError } from '../../utils/error';
 
 export default defineEventHandler(async (event) => {
-  const token = getCookie(event, 'token') || event.node.req.headers.authorization?.split(' ')[1];
+  const token = extractToken(event);
 
   if (!token) {
-    handleUnauthorized();
+    return handleUnauthorized();
   }
 
   try {
     const user = await verifyToken(token);
     if (!user || !user._id) {
-      handleUnauthorized('用户不存在');
+      return handleUnauthorized('用户不存在');
     }
 
     const body = await readBody(event);
@@ -35,7 +36,7 @@ export default defineEventHandler(async (event) => {
     );
 
     if (!updatedUser) {
-      handleNotFound('用户不存在');
+      return handleNotFound('用户不存在');
     }
 
     // Remove password from response
@@ -49,6 +50,6 @@ export default defineEventHandler(async (event) => {
     };
   } catch (error: any) {
     console.error('Update profile error:', error);
-    handleInternalError(error.message || '更新失败');
+    return handleInternalError(error.message || '更新失败');
   }
 });

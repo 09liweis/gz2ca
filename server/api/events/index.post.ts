@@ -1,11 +1,12 @@
-import { defineEventHandler, getCookie, readBody } from 'h3';
+import { defineEventHandler, readBody } from 'h3';
 import { Event } from '../../models/event.schema';
 import { verifyToken } from '../../utils/jwt';
 import { upsertPlace } from '../../utils/place';
+import { extractToken } from '../../utils/auth';
 import { handleUnauthorized, handleInternalError } from '../../utils/error';
 
 export default defineEventHandler(async (event) => {
-  const token = getCookie(event, 'token') || event.node.req.headers.authorization?.split(' ')[1];
+  const token = extractToken(event);
 
   if (!token) {
     return handleUnauthorized('请先登录');

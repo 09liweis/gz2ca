@@ -1,33 +1,34 @@
-import { defineEventHandler, getCookie, readMultipartFormData } from 'h3';
+import { defineEventHandler, readMultipartFormData } from 'h3';
 import { User } from '../../models/user.schema';
 import { verifyToken } from '../../utils/jwt';
 import { uploadToR2, deleteFromR2, extractKeyFromUrl } from '../../utils/storage';
 import { resizeAndOptimizeImage } from '../../utils/image';
+import { extractToken } from '../../utils/auth';
 import { handleUnauthorized, handleBadRequest, handleNotFound, handleInternalError } from '../../utils/error';
 
 export default defineEventHandler(async (event) => {
-  const token = getCookie(event, 'token') || event.node.req.headers.authorization?.split(' ')[1];
+  const token = extractToken(event);
 
   if (!token) {
-    handleUnauthorized();
+    return handleUnauthorized();
   }
 
   try {
     const user = await verifyToken(token);
     if (!user || !user._id) {
-      handleUnauthorized('用户不存在');
+      return handleUnauthorized('用户不存在');
     }
 
     const formData = await readMultipartFormData(event);
 
     if (!formData || formData.length === 0) {
-      handleBadRequest('未上传文件');
+      return handleBadRequest('未上传文件');
     }
 
     const fileData = formData.find(item => item.name === 'avatar');
 
     if (!fileData || !fileData.data) {
-      handleBadRequest('未找到头像文件');
+      return handleBadRequest('未找到头像文件');
     }
 
     // Validate file type
@@ -35,13 +36,13 @@ export default defineEventHandler(async (event) => {
     const fileType = fileData.type || 'image/jpeg';
 
     if (!allowedTypes.includes(fileType)) {
-      handleBadRequest('只支持图片格式 (JPEG, PNG, GIF, WebP)');
+      return handleBadRequest('只支持图片格式 (JPEG, PNG, GIF, WebP)');
     }
 
     // Validate file size (max 5MB before optimization)
     const maxSize = 5 * 1024 * 1024;
     if (fileData.data.length > maxSize) {
-      handleBadRequest('图片大小不能超过 5MB');
+      return handleBadRequest('图片大小不能超过 5MB');
     }
 
     // Resize and optimize image to max 50KB
@@ -80,7 +81,7 @@ export default defineEventHandler(async (event) => {
     );
 
     if (!updatedUser) {
-      handleNotFound('用户不存在');
+      return handleNotFound('用户不存在');
     }
 
     // Remove password from response
@@ -94,6 +95,6 @@ export default defineEventHandler(async (event) => {
     };
   } catch (error: any) {
     console.error('Upload avatar error:', error);
-    handleInternalError(error.message || '上传失败');
+    return handleInternalError(error.message || '上传失败');
   }
 });

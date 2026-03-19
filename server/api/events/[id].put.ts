@@ -1,11 +1,12 @@
-import { defineEventHandler, getCookie, readBody, getRouterParam } from 'h3';
+import { defineEventHandler, readBody, getRouterParam } from 'h3';
 import { Event } from '../../models/event.schema';
 import { verifyToken } from '../../utils/jwt';
 import { upsertPlace } from '../../utils/place';
+import { extractToken } from '../../utils/auth';
 import { handleUnauthorized, handleBadRequest, handleNotFound, handleForbidden, handleInternalError } from '../../utils/error';
 
 export default defineEventHandler(async (event) => {
-  const token = getCookie(event, 'token') || event.node.req.headers.authorization?.split(' ')[1];
+  const token = extractToken(event);
 
   if (!token) {
     return handleUnauthorized('请先登录');
@@ -14,12 +15,12 @@ export default defineEventHandler(async (event) => {
   try {
     const user = await verifyToken(token);
     if (!user || !user._id) {
-      handleUnauthorized('用户不存在');
+      return handleUnauthorized('用户不存在');
     }
 
     const eventId = getRouterParam(event, 'id');
     if (!eventId) {
-      handleBadRequest('活动ID不能为空');
+      return handleBadRequest('活动ID不能为空');
     }
 
     const existingEvent = await Event.findById(eventId);
