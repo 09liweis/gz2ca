@@ -18,7 +18,7 @@
     </div>
 
     <!-- Events List -->
-    <div v-else-if="events.length > 0" :class="['grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3']">
+    <div v-else-if="events.length > 0" :class="['grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3']">
       <EventCard
         v-for="event in events"
         :key="event._id"
