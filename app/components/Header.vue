@@ -4,11 +4,11 @@
       <div class="flex justify-between items-center h-16">
         <!-- Logo -->
         <NuxtLink to="/" class="flex items-center space-x-3 group">
-          <span class="font-semibold text-gray-900 hidden sm:inline">{{ SITE_NAME }}</span>
+          <span class="font-semibold text-gray-900">{{ SITE_NAME }}</span>
         </NuxtLink>
 
         <!-- Desktop Navigation -->
-        <div class="hidden md:flex items-center space-x-1">
+        <div class="hidden sm:flex items-center space-x-1">
           <LinkButton
             v-for="menu in navigationMenus"
             :key="menu.to"
@@ -31,7 +31,7 @@
         </div>
 
         <!-- Auth Section Desktop -->
-        <div class="hidden md:flex items-center gap-4">
+        <div class="hidden sm:flex items-center gap-4">
           <template v-if="isLoggedIn">
             <LinkButton to="/profile" variant="text-primary" class="!px-3 !text-gray-700">
               {{ userName }}
@@ -53,7 +53,7 @@
           type="button"
           variant="secondary"
           @click="isOpen = !isOpen"
-          class="md:hidden !p-2 !border-0 !bg-transparent !rounded-lg hover:!bg-gray-100 !text-gray-900"
+          class="sm:hidden !p-2 !border-0 !bg-transparent !rounded-lg hover:!bg-gray-100 !text-gray-900"
           :full-width="false"
         >
           <svg v-if="!isOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -67,7 +67,7 @@
 
       <!-- Mobile menu -->
       <div v-if="isOpen"
-        class="md:hidden pb-4 border-t border-gray-200 pt-4 space-y-3 animate-in fade-in slide-in-from-top-2 duration-200">
+        class="sm:hidden pb-4 border-t border-gray-200 pt-4 space-y-3 animate-in fade-in slide-in-from-top-2 duration-200">
         <LinkButton
           v-for="menu in navigationMenus"
           :key="menu.to"
