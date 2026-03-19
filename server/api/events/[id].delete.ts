@@ -28,7 +28,7 @@ export default defineEventHandler(async (event) => {
     }
 
     // Check if user is the organizer
-    if (existingEvent.user_id !== user._id.toString()) {
+    if (existingEvent.user_id.toString() !== user._id.toString()) {
       return handleForbidden('无权删除此活动');
     }
 
