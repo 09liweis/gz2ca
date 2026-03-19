@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  modules: ['@nuxtjs/tailwindcss', 'nuxt-mongoose'],
+  modules: ['@nuxtjs/tailwindcss', 'nuxt-mongoose','@vercel/analytics'],
   runtimeConfig: {
     googleClientId: process.env.GOOGLE_CLIENT_ID,
     public: {
