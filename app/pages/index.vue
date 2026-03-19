@@ -86,7 +86,7 @@ import { SITE_NAME } from '~/constants'
 const router = useRouter()
 const { isLoggedIn } = useUser()
 
-const loading = ref(false)
+const loading = ref(true)
 const errorMessage = ref('')
 const events = ref<any[]>([])
 const showCreateModal = ref(false)
