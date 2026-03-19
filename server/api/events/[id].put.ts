@@ -28,7 +28,7 @@ export default defineEventHandler(async (event) => {
       return handleNotFound('活动不存在');
     }
 
-    if (existingEvent.user_id !== user._id.toString()) {
+    if (existingEvent.user_id.toString() !== user._id.toString()) {
       return handleForbidden('无权修改此活动');
     }
 
@@ -50,8 +50,11 @@ export default defineEventHandler(async (event) => {
       { new: true, runValidators: true }
     );
 
-    const populatedEvent = await Event.findById(updatedEvent._id).populate('place_id');
+    if (!updatedEvent) {
+      return handleNotFound('活动更新失败');
+    }
 
+    const populatedEvent = await Event.findById(updatedEvent._id).populate('place_id');
     return {
       success: true,
       message: '活动更新成功',

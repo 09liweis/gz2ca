@@ -29,20 +29,11 @@ interface Props {
 const props = defineProps<Props>()
 
 const formatDate = (date: string) => {
-  return new Date(date).toLocaleDateString('zh-CN', {
+  return new Date(date).toLocaleString('zh-CN', {
+    timeZone: 'UTC',
     year: 'numeric',
     month: 'long',
     day: 'numeric'
-  })
-}
-
-const formatDateTime = (date: string) => {
-  return new Date(date).toLocaleString('zh-CN', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
   })
 }
 
