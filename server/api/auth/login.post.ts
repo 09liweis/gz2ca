@@ -33,14 +33,6 @@ export default defineEventHandler(async (event) => {
     // Generate JWT token
     const token = await getLoginToken({ userId: user._id });
 
-    // Set token in cookie
-    setCookie(event, 'token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 60 * 60 * 24 * 7 // 7 days
-    });
-
     // Remove password from response
     const userResponse = user.toObject();
     delete userResponse.pwd;
