@@ -139,7 +139,7 @@ onMounted(() => {
 })
 
 useHead({
-  title: `活动 - ${SITE_NAME}`,
+  title: `${SITE_NAME}`,
   meta: [
     { name: 'description', content: `查看${SITE_NAME}的所有活动。` },
     { name: 'keywords', content: `${SITE_NAME}, 加拿大, 活动, 聚会` },
