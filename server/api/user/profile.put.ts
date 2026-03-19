@@ -41,7 +41,7 @@ export default defineEventHandler(async (event) => {
 
     // Remove password from response
     const userResponse = updatedUser.toObject();
-    delete userResponse.pwd;
+    (userResponse as any).pwd = '*******';
 
     return {
       success: true,
