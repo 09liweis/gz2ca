@@ -6,13 +6,13 @@ export default defineEventHandler(async (event) => {
   const token = getCookie(event, 'token') || event.node.req.headers.authorization?.split(' ')[1];
 
   if (!token) {
-    handleUnauthorized();
+    return handleUnauthorized();
   }
 
   try {
     const user = await verifyToken(token);
     if (!user || !user._id) {
-      handleUnauthorized('用户不存在');
+      return handleUnauthorized('用户不存在');
     }
 
     // Return user profile without password
@@ -25,6 +25,6 @@ export default defineEventHandler(async (event) => {
     };
   } catch (error: any) {
     console.error('Get profile error:', error);
-    handleUnauthorized('获取用户信息失败');
+    return handleUnauthorized('获取用户信息失败');
   }
 });
