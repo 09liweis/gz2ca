@@ -87,10 +87,11 @@ interface EventData {
   _id?: string
   tl?: string
   desc?: string
-  date?: string | Date
+  date: string
   address?: string
   city?: string
   status?: string
+  place_id?: string | any
 }
 
 interface Props {
@@ -168,7 +169,7 @@ const initForm = () => {
   if (props.eventData) {
     form.value.tl = props.eventData.tl || ''
     form.value.desc = props.eventData.desc || ''
-    form.value.date = props.eventData.date ? new Date(props.eventData.date).toISOString().split('T')[0] : ''
+    form.value.date = props.eventData.date?.split('T')[0] || ''
     form.value.address = props.eventData.place_id?.full_address || ''
     form.value.status = props.eventData.status || 'draft'
     
