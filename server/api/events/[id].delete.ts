@@ -1,7 +1,9 @@
 import { defineEventHandler, getRouterParam } from 'h3';
 import { Event } from '../../models/event.schema';
+import { Media } from '../../models/media.schema';
 import { verifyToken } from '../../utils/jwt';
 import { extractToken } from '../../utils/auth';
+import { deleteFromR2, extractKeyFromUrl } from '../../utils/storage'
 import { handleUnauthorized, handleBadRequest, handleNotFound, handleForbidden, handleInternalError } from '../../utils/error';
 
 export default defineEventHandler(async (event) => {
@@ -24,16 +26,23 @@ export default defineEventHandler(async (event) => {
 
     const existingEvent = await Event.findById(eventId);
     if (!existingEvent) {
-      return handleNotFound('活动不存在');
+      return handleNotFound(`${eventId} 活动不存在`);
     }
 
     // Check if user is the organizer
     if (existingEvent.user_id.toString() !== user._id.toString()) {
-      return handleForbidden('无权删除此活动');
+      return handleForbidden(`${existingEvent.user_id} ${user._id}无权删除此活动`);
     }
 
     // Delete event
     await Event.findByIdAndDelete(eventId);
+    const medias = await Media.find({event_id: eventId});
+    medias.forEach(async(media)=>{
+      // Delete from R2
+      const key = extractKeyFromUrl(media.src.toString())
+      await deleteFromR2(key)
+    })
+    await Media.deleteMany({event_id: eventId})
 
     return {
       success: true,
