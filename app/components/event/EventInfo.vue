@@ -21,21 +21,13 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import {formatDate} from '~/utils/date'
 
 interface Props {
   event: any
 }
 
 const props = defineProps<Props>()
-
-const formatDate = (date: string) => {
-  return new Date(date).toLocaleString('zh-CN', {
-    timeZone: 'UTC',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  })
-}
 
 const infoItems = computed(() => {
   const items: Array<{

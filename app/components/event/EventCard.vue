@@ -16,7 +16,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
           </div>
-          <span class="text-sm">{{ formatShortDate(event.date) }}</span>
+          <span class="text-sm">{{ formatDate(event.date) }}</span>
         </div>
         <span
           v-if="showStatus"
@@ -95,6 +95,8 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
+import {formatDate} from '~/utils/date'
+import Button from '~/components/form/Button.vue'
 
 interface Props {
   event: any
@@ -113,22 +115,6 @@ defineEmits<{
   (e: 'edit', event: any): void
   (e: 'delete', event: any): void
 }>()
-
-const formatDate = (date: string) => {
-  return new Date(date).toLocaleDateString('zh-CN', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  })
-}
-
-const formatShortDate = (date: string) => {
-  const d = new Date(date)
-  return new Date(date).toLocaleDateString('zh-CN', {
-    month: 'short',
-    day: 'numeric'
-  })
-}
 
 const handleClick = () => {
   router.push(`/events/${props.event._id}`)
