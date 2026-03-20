@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
     }
 
     // Verify password
-    const isPasswordValid = await comparePassword(password, user.pwd);
+    const isPasswordValid = await comparePassword(password, user.pwd.toString());
     if (!isPasswordValid) {
       return handleUnauthorized('邮箱或密码错误');
     }
@@ -33,15 +33,11 @@ export default defineEventHandler(async (event) => {
     // Generate JWT token
     const token = await getLoginToken({ userId: user._id });
 
-    // Remove password from response
-    const userResponse = user.toObject();
-    delete userResponse.pwd;
-
     return {
       success: true,
       message: '登录成功',
       token,
-      user: userResponse
+      user
     };
   } catch (error: any) {
     console.error('Login error:', error);

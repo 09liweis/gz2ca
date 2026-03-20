@@ -15,7 +15,7 @@ export const verifyToken = async (token:string) => {
   try {
     const decoded = await jwt.verify(token, process.env.JWT_SECRET as string) as {userId:string};
     const userId = decoded.userId;
-    const user = await User.findById(userId);
+    const user = await User.findById(userId,'-pwd');
     if (!user) {
       console.error('User not found');
       return EMPTY_USER;

@@ -15,13 +15,9 @@ export default defineEventHandler(async (event) => {
       return handleUnauthorized('用户不存在');
     }
 
-    // Return user profile without password
-    const userResponse = user.toObject();
-    delete userResponse.pwd;
-
     return {
       success: true,
-      user: userResponse
+      user
     };
   } catch (error: any) {
     console.error('Get profile error:', error);
