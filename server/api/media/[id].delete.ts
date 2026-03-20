@@ -6,18 +6,22 @@ export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')
 
   if (!id) {
-    handleBadRequest('媒体ID不能为空')
+    handleBadRequest(`媒体ID不能为空`)
   }
 
   try {
     const media = await Media.findById(id)
 
     if (!media) {
-      handleNotFound('媒体不存在')
+      return handleNotFound(`${id} 媒体不存在`)
+    }
+
+    if (!media.src) {
+      return handleBadRequest(`${id} 媒体源不能为空`)
     }
 
     // Delete from R2
-    const key = extractKeyFromUrl(media.src)
+    const key = extractKeyFromUrl(media.src.toString())
     await deleteFromR2(key)
 
     // Delete from database
