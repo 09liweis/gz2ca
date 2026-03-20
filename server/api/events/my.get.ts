@@ -28,6 +28,6 @@ export default defineEventHandler(async (event) => {
     };
   } catch (error: any) {
     console.error('Get my events error:', error);
-    handleInternalError('获取活动失败');
+    return handleInternalError('获取活动失败');
   }
 });
