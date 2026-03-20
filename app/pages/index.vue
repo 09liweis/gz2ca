@@ -2,13 +2,11 @@
   <div class="min-h-screen bg-gray-50">
     <!-- Hero Section -->
     <div class="bg-[#11817b] text-white">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div class="text-center">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
           <h1 class="text-4xl md:text-5xl font-bold mb-4">{{SITE_NAME}}</h1>
           <p class="text-xl text-blue-50 max-w-2xl mx-auto mb-8">
             探索精彩活动，共同创造美好回忆
           </p>
-        </div>
       </div>
     </div>
 
@@ -25,20 +23,10 @@
           </div>
 
           <div class="flex gap-3">
-            <Button type="button" @click="filterView = 'all'" class="!px-4 !py-2 text-sm font-medium !rounded-lg"
-              :class="filterView === 'all' ? '!bg-[#b78026] !text-white' : '!bg-gray-100 !text-gray-700 hover:!bg-gray-200'"
+            <Button v-for="filter in filters" type="button" @click="filterView = filter.value" class="!px-4 !py-2 text-sm font-medium !rounded-lg"
+              :class="filterView === filter.value ? '!bg-[#b78026] !text-white' : '!bg-gray-100 !text-gray-700 hover:!bg-gray-200'"
               :full-width="false">
-              全部
-            </Button>
-            <Button type="button" @click="filterView = 'upcoming'" class="!px-4 !py-2 text-sm font-medium !rounded-lg"
-              :class="filterView === 'upcoming' ? '!bg-[#b78026] !text-white' : '!bg-gray-100 !text-gray-700 hover:!bg-gray-200'"
-              :full-width="false">
-              即将举行
-            </Button>
-            <Button type="button" @click="filterView = 'past'" class="!px-4 !py-2 text-sm font-medium !rounded-lg"
-              :class="filterView === 'past' ? '!bg-[#b78026] !text-white' : '!bg-gray-100 !text-gray-700 hover:!bg-gray-200'"
-              :full-width="false">
-              往期活动
+              {{filter.tl}}
             </Button>
           </div>
         </div>
@@ -90,7 +78,12 @@ const loading = ref(true)
 const errorMessage = ref('')
 const events = ref<any[]>([])
 const showCreateModal = ref(false)
-const filterView = ref<'all' | 'upcoming' | 'past'>('all')
+const filterView = ref<string>('all')
+const filters = [
+  {tl:'全部',value:'all'},
+  {tl:'即将举行',value:'upcoming'},
+  {tl:'往期活动',value:'past'}
+]
 
 const displayedEvents = computed(() => {
   const now = new Date()
