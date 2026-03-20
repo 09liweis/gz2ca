@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
   try {
     const events = await Event.find({ status: 'published' })
       .populate('place_id')
-      .sort({ date: 1 })
+      .sort({ date: -1 })
       .lean();
 
     return {
