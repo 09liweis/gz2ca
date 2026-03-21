@@ -16,6 +16,13 @@ export default defineNuxtConfig({
   },
   mongoose: {
     uri: process.env.MONGODB_URI,
+    options: {
+      bufferCommands: false,
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+      maxPoolSize: 10,
+      minPoolSize: 2
+    },
     modelsDir: 'models',
   },
   app: {

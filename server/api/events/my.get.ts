@@ -3,6 +3,7 @@ import { Event } from '../../models/event.schema';
 import { verifyToken } from '../../utils/jwt';
 import { extractToken } from '../../utils/auth';
 import { handleUnauthorized, handleInternalError } from '../../utils/error';
+import { connectDB } from '../../utils/db';
 
 export default defineEventHandler(async (event) => {
   const token = extractToken(event);
@@ -12,6 +13,8 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
+    await connectDB();
+
     const user = await verifyToken(token);
     if (!user || !user._id) {
       return handleUnauthorized('用户不存在');

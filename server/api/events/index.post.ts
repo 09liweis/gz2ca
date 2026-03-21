@@ -4,6 +4,7 @@ import { verifyToken } from '../../utils/jwt';
 import { upsertPlace } from '../../utils/place';
 import { extractToken } from '../../utils/auth';
 import { handleUnauthorized, handleInternalError } from '../../utils/error';
+import { connectDB } from '../../utils/db';
 
 export default defineEventHandler(async (event) => {
   const token = extractToken(event);
@@ -13,9 +14,11 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
+    await connectDB();
+
     const user = await verifyToken(token);
     if (!user || !user._id) {
-      handleUnauthorized('用户不存在');
+      return handleUnauthorized('用户不存在');
     }
 
     const body = await readBody(event);
@@ -43,6 +46,6 @@ export default defineEventHandler(async (event) => {
     };
   } catch (error: any) {
     console.error('Create event error:', error);
-    handleInternalError(error.message || '创建活动失败');
+    return handleInternalError(error.message || '创建活动失败');
   }
 });

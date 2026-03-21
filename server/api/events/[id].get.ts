@@ -1,15 +1,20 @@
+import { defineEventHandler, getRouterParam } from 'h3'
 import { Event } from '../../models/event.schema'
 import { User } from '../../models/user.schema'
+import { Media } from '../../models/media.schema'
 import { handleBadRequest, handleNotFound, handleInternalError } from '../../utils/error'
+import { connectDB } from '../../utils/db'
 
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')
 
   if (!id) {
-    handleBadRequest('活动ID不能为空')
+    return handleBadRequest('活动ID不能为空')
   }
 
   try {
+    await connectDB();
+
     const eventDoc = await Event.findById(id).populate('place_id')
 
     if (!eventDoc) {
@@ -29,6 +34,6 @@ export default defineEventHandler(async (event) => {
     if (error.statusCode) {
       throw error
     }
-    handleInternalError('获取活动详情失败')
+    return handleInternalError('获取活动详情失败')
   }
 })
